@@ -1,8 +1,16 @@
 #include <iostream>
 
 int main(int argc, char** argv) {
-	std::cout << "Lucas is nice" << std::endl;
-	std::cout << "Pilip is also nice" << std::endl;
-	std::cout << "Gian is like the worst" << std::endl;
+	printf("\x1B[31mLucas\033[0m\t\t");
+	std::cout << "is nice" << std::endl;
+
+	printf("\x1B[34mPhilip\033[0m\t\t");
+	std::cout << "is also nice" << std::endl;
+
+	printf("\x1B[32mGian\033[0m\t\t");
+	std::cout << "is like the worst" << std::endl;
+
+	
+
 	return 1;
 }
