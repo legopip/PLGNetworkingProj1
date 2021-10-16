@@ -1,6 +1,6 @@
 #include <iostream>
 
-int main(int argc, char** argv) {
+int notmain(int argc, char** argv) {
 	printf("\x1B[31mLucas\033[0m\t\t");
 	std::cout << "is nice" << std::endl;
 
