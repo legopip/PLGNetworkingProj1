@@ -5,6 +5,8 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string>
+#include <iostream>
 
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -24,7 +26,8 @@ int main(int argc, char **argv)
 	struct addrinfo *ptr = NULL;
 	struct addrinfo hints;
 
-	const char *sendbuf = "Hello World!";		// The messsage to send to the server
+	//const char *sendbuf = "Hello World!";		// The messsage to send to the server
+	std::string message = "";
 
 	char recvbuf[DEFAULT_BUFLEN];				// The maximum buffer size of a message to send
 	int result;									// code of the result of any command we use
@@ -85,8 +88,11 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	//TODO: replace with non-blocking kbhit method
+	std::cin >> message;
+
 	// Step #4 Send the message to the server
-	result = send(connectSocket, sendbuf, (int)strlen(sendbuf), 0);
+	result = send(connectSocket, message.c_str(), (int)strlen(message.c_str()), 0);
 	if (result == SOCKET_ERROR)
 	{
 		printf("send failed with error: %d\n", WSAGetLastError());
