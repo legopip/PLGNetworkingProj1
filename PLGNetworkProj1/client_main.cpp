@@ -89,18 +89,45 @@ int main(int argc, char **argv)
 	}
 
 	//TODO: replace with non-blocking kbhit method
-	std::cin >> message;
+	std::cout << "Send the message 'cEXIT' to leave" << std::endl;
+	while (message != "cEXIT") {
+		std::cin >> message;
 
-	// Step #4 Send the message to the server
-	result = send(connectSocket, message.c_str(), (int)strlen(message.c_str()), 0);
-	if (result == SOCKET_ERROR)
-	{
-		printf("send failed with error: %d\n", WSAGetLastError());
-		closesocket(connectSocket);
-		WSACleanup();
-		return 1;
+		// Step #4 Send the message to the server
+		result = send(connectSocket, message.c_str(), (int)strlen(message.c_str()), 0);
+		if (result == SOCKET_ERROR)
+		{
+			printf("send failed with error: %d\n", WSAGetLastError());
+			closesocket(connectSocket);
+			WSACleanup();
+			return 1;
+		}
+		printf("Bytes Sent: %ld\n", result);
+
+
+
+
+		// Step #6 Receive until the peer closes the connection
+		//do {
+
+			result = recv(connectSocket, recvbuf, recvbuflen, 0);
+			if (result > 0)
+			{
+				printf("Bytes received: %d\n", result);
+				printf("Message: %s\n", &recvbuf);
+			}
+			else if (result == 0)
+			{
+				printf("Connection closed\n");
+			}
+			else
+			{
+				printf("recv failed with error: %d\n", WSAGetLastError());
+			}
+
+		//} while (result > 0);
+
 	}
-	printf("Bytes Sent: %ld\n", result);
 
 	// Step #5 shutdown the connection since no more data will be sent
 	result = shutdown(connectSocket, SD_SEND);
@@ -111,26 +138,6 @@ int main(int argc, char **argv)
 		WSACleanup();
 		return 1;
 	}
-
-	// Step #6 Receive until the peer closes the connection
-	do {
-
-		result = recv(connectSocket, recvbuf, recvbuflen, 0);
-		if (result > 0)
-		{
-			printf("Bytes received: %d\n", result);
-			printf("Message: %s\n", &recvbuf);
-		}
-		else if (result == 0)
-		{
-			printf("Connection closed\n");
-		}
-		else
-		{
-			printf("recv failed with error: %d\n", WSAGetLastError());
-		}
-
-	} while (result > 0);
 
 	// Step #7 cleanup
 	closesocket(connectSocket);
