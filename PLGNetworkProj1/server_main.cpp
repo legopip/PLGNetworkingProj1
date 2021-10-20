@@ -73,7 +73,7 @@ int main(void)
     }
 
     freeaddrinfo(info);
-    //hi
+    
     result = listen(listenSocket, SOMAXCONN);
     if (result == SOCKET_ERROR)
 	{
@@ -82,6 +82,16 @@ int main(void)
         WSACleanup();
         return 1;
     }
+
+    //******************************
+    
+    
+    
+    
+    
+    //******************************
+
+
 
     // Step #5 Accept a client socket
     clientSocket = accept(listenSocket, NULL, NULL);
