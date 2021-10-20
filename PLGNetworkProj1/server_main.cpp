@@ -73,7 +73,7 @@ int main(void)
     }
 
     freeaddrinfo(info);
-
+    //hi
     result = listen(listenSocket, SOMAXCONN);
     if (result == SOCKET_ERROR)
 	{
