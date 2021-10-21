@@ -73,25 +73,23 @@ int main(int argc, char **argv)
 			return 1;
 		}
 
+
+		// Connect to server.
+		result = connect(connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+		if (result == SOCKET_ERROR)
+		{
+			closesocket(connectSocket);
+			connectSocket = INVALID_SOCKET;
+			continue;
+		}
+
 		result = ioctlsocket(connectSocket, FIONBIO, &mode);
 		if (result != NO_ERROR) {
 			printf("ioctlsocket failed with error: %ld\n", result);
 			isConnected = true;
-			break;
-		}
-
-		// Connect to server.
-		//result = connect(connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
-		//if (result == SOCKET_ERROR)
-		//{
-		//	closesocket(connectSocket);
-		//	connectSocket = INVALID_SOCKET;
-		//	continue;
-		//}
-		//else {
 			
-		//}
-		//break;
+		}
+		break;
 	}
 
 	freeaddrinfo(infoResult);
@@ -160,11 +158,12 @@ int main(int argc, char **argv)
 				if (result == SOCKET_ERROR)
 				{
 				printf("send failed with error: %d\n", WSAGetLastError());
-				//closesocket(connectSocket);
-				//WSACleanup();
-				//return 1;
+				closesocket(connectSocket);
+				WSACleanup();
+				return 1;
 				}
 				printf("Bytes Sent: %ld\n", result);
+				message = "";
 			}
 			else {
 				message.push_back(key);

@@ -141,6 +141,9 @@
   <ItemGroup>
     <ClCompile Include="..\PLGNetworkProj1\server_main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ClientData.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
