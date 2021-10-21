@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PLGNetworkProj1", "PLGNetwo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PLGNetworkingProj1Server", "PLGNetworkingProj1Server\PLGNetworkingProj1Server.vcxproj", "{713EDB37-B8E4-4083-AE75-FD7B8ABD6308}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PLGNetworkingProj1Lib", "PLGNetworkingProj1Lib\PLGNetworkingProj1Lib.vcxproj", "{7BB63B04-D0AF-4881-BFE1-C78393B70FC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{713EDB37-B8E4-4083-AE75-FD7B8ABD6308}.Release|x64.Build.0 = Release|x64
 		{713EDB37-B8E4-4083-AE75-FD7B8ABD6308}.Release|x86.ActiveCfg = Release|Win32
 		{713EDB37-B8E4-4083-AE75-FD7B8ABD6308}.Release|x86.Build.0 = Release|Win32
+		{7BB63B04-D0AF-4881-BFE1-C78393B70FC7}.Debug|x64.ActiveCfg = Debug|x64
+		{7BB63B04-D0AF-4881-BFE1-C78393B70FC7}.Debug|x64.Build.0 = Debug|x64
+		{7BB63B04-D0AF-4881-BFE1-C78393B70FC7}.Debug|x86.ActiveCfg = Debug|Win32
+		{7BB63B04-D0AF-4881-BFE1-C78393B70FC7}.Debug|x86.Build.0 = Debug|Win32
+		{7BB63B04-D0AF-4881-BFE1-C78393B70FC7}.Release|x64.ActiveCfg = Release|x64
+		{7BB63B04-D0AF-4881-BFE1-C78393B70FC7}.Release|x64.Build.0 = Release|x64
+		{7BB63B04-D0AF-4881-BFE1-C78393B70FC7}.Release|x86.ActiveCfg = Release|Win32
+		{7BB63B04-D0AF-4881-BFE1-C78393B70FC7}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
