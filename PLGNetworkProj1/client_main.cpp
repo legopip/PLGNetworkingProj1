@@ -86,9 +86,9 @@ int main(int argc, char **argv)
 		result = ioctlsocket(connectSocket, FIONBIO, &mode);
 		if (result != NO_ERROR) {
 			printf("ioctlsocket failed with error: %ld\n", result);
-			isConnected = true;
 			
 		}
+			isConnected = true;
 		break;
 	}
 
