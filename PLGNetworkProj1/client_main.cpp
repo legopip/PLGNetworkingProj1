@@ -17,6 +17,8 @@
 #define DEFAULT_PORT "27015"					// The default port to use
 #define SERVER "127.0.0.1"						// The IP of our server
 
+
+
 int main(int argc, char **argv)
 {
 	WSADATA wsaData;							// holds Winsock data
@@ -91,8 +93,7 @@ int main(int argc, char **argv)
 	//TODO: replace with non-blocking kbhit method
 	std::cout << "Send the message 'cEXIT' to leave" << std::endl;
 	while (message != "cEXIT") {
-		std::cin >> message;
-
+		
 		// Step #4 Send the message to the server
 		result = send(connectSocket, message.c_str(), (int)strlen(message.c_str()), 0);
 		if (result == SOCKET_ERROR)
