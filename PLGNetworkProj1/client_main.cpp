@@ -103,47 +103,16 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	//TODO: replace with non-blocking kbhit method
-	/*std::cout << "Send the message 'cEXIT' to leave" << std::endl;
-	while (message != "cEXIT") {
-		
-		// Step #4 Send the message to the server
-		result = send(connectSocket, message.c_str(), (int)strlen(message.c_str()), 0);
-		if (result == SOCKET_ERROR)
-		{
-			printf("send failed with error: %d\n", WSAGetLastError());
-			closesocket(connectSocket);
-			WSACleanup();
-			return 1;
-		}
-		printf("Bytes Sent: %ld\n", result);
-
-
-
-
-		// Step #6 Receive until the peer closes the connection
-		//do {
-
-			result = recv(connectSocket, recvbuf, recvbuflen, 0);
-			if (result > 0)
-			{
-				printf("Bytes received: %d\n", result);
-				printf("Message: %s\n", &recvbuf);
-			}
-			else if (result == 0)
-			{
-				printf("Connection closed\n");
-			}
-			else
-			{
-				printf("recv failed with error: %d\n", WSAGetLastError());
-			}
-
-		//} while (result > 0);
-
-	}*/
-
-	//TODO: login to server/room with special message
+	//Right now I'm assuming that this can be blocking
+	std::string username = "";
+	std::string roomname = "";
+	std::cout << "Enter your username:" << std::endl;
+	std::cin >> username;
+	std::cout << "Enter the name of the room you want to join:" << std::endl;
+	std::cin >> roomname;
+	//TODO: form a Login Call with the data
+	
+	
 	bool updateLog = false;
 	bool quit = false;
 	while (!quit) {
