@@ -134,6 +134,11 @@ std::string Buffer::readUInt8BE(int stringSize)
 	return output;
 }
 
+std::vector<uint8_t> Buffer::GetBuffer()
+{
+	return buffer;
+}
+
 void Buffer::ClearBuffer()
 {
 	buffer.clear();

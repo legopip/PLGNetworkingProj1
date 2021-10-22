@@ -9,6 +9,8 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <Buffer.h>
+
 
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -19,10 +21,12 @@
 #define DEFAULT_PORT "27015"					// The default port to use
 #define SERVER "127.0.0.1"						// The IP of our server
 
-
+Buffer outgoing(DEFAULT_BUFLEN);
+Buffer incoming(DEFAULT_BUFLEN);
 
 int main(int argc, char **argv)
 {
+	
 	WSADATA wsaData;							// holds Winsock data
 	SOCKET connectSocket = INVALID_SOCKET;		// Our connection socket used to connect to the server
 

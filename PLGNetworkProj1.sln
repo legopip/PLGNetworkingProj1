@@ -4,8 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PLGNetworkProj1", "PLGNetworkProj1\PLGNetworkProj1.vcxproj", "{3C421B38-3A32-4EFB-8AA3-F8D6E2CFA921}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7BB63B04-D0AF-4881-BFE1-C78393B70FC7} = {7BB63B04-D0AF-4881-BFE1-C78393B70FC7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PLGNetworkingProj1Server", "PLGNetworkingProj1Server\PLGNetworkingProj1Server.vcxproj", "{713EDB37-B8E4-4083-AE75-FD7B8ABD6308}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7BB63B04-D0AF-4881-BFE1-C78393B70FC7} = {7BB63B04-D0AF-4881-BFE1-C78393B70FC7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PLGNetworkingProj1Lib", "PLGNetworkingProj1Lib\PLGNetworkingProj1Lib.vcxproj", "{7BB63B04-D0AF-4881-BFE1-C78393B70FC7}"
 EndProject

@@ -39,5 +39,7 @@ public:
 	std::string readUInt8BE(std::size_t index, int stringSize);
 	std::string readUInt8BE(int stringSize);
 
+	std::vector<uint8_t> GetBuffer();
+
 	void ClearBuffer();
 };
