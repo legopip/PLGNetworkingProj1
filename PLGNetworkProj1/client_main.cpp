@@ -174,8 +174,7 @@ int main(int argc, char **argv)
 				message.push_back(key);
 				system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
 				updateLog = true;
-				std::cout << "message: ";
-				std::cout << message << std::endl;
+				
 			}
 		}
 
@@ -210,6 +209,8 @@ int main(int argc, char **argv)
 					std::cout << chatlog[i] << std::endl;
 				}
 				std::cout << std::endl;
+				std::cout << "message: ";
+				std::cout << message << std::endl;
 				updateLog = false;
 			}
 
