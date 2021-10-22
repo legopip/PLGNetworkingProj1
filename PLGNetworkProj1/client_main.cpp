@@ -4,6 +4,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdlib.h>
+#include <conio.h>
 #include <stdio.h>
 #include <string>
 #include <iostream>
@@ -17,6 +18,8 @@
 #define DEFAULT_PORT "27015"					// The default port to use
 #define SERVER "127.0.0.1"						// The IP of our server
 
+
+
 int main(int argc, char **argv)
 {
 	WSADATA wsaData;							// holds Winsock data
@@ -25,6 +28,7 @@ int main(int argc, char **argv)
 	struct addrinfo *infoResult = NULL;			// Holds the address information of our server
 	struct addrinfo *ptr = NULL;
 	struct addrinfo hints;
+	u_long mode = 1;
 
 	//const char *sendbuf = "Hello World!";		// The messsage to send to the server
 	std::string message = "";
@@ -55,6 +59,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	bool isConnected = false;
 	// Step #3 Attempt to connect to an address until one succeeds
 	for (ptr = infoResult; ptr != NULL; ptr = ptr->ai_next)
 	{
@@ -68,6 +73,7 @@ int main(int argc, char **argv)
 			return 1;
 		}
 
+
 		// Connect to server.
 		result = connect(connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
 		if (result == SOCKET_ERROR)
@@ -76,6 +82,13 @@ int main(int argc, char **argv)
 			connectSocket = INVALID_SOCKET;
 			continue;
 		}
+
+		result = ioctlsocket(connectSocket, FIONBIO, &mode);
+		if (result != NO_ERROR) {
+			printf("ioctlsocket failed with error: %ld\n", result);
+			
+		}
+			isConnected = true;
 		break;
 	}
 
@@ -89,10 +102,9 @@ int main(int argc, char **argv)
 	}
 
 	//TODO: replace with non-blocking kbhit method
-	std::cout << "Send the message 'cEXIT' to leave" << std::endl;
+	/*std::cout << "Send the message 'cEXIT' to leave" << std::endl;
 	while (message != "cEXIT") {
-		std::cin >> message;
-
+		
 		// Step #4 Send the message to the server
 		result = send(connectSocket, message.c_str(), (int)strlen(message.c_str()), 0);
 		if (result == SOCKET_ERROR)
@@ -126,6 +138,62 @@ int main(int argc, char **argv)
 			}
 
 		//} while (result > 0);
+
+	}*/
+
+	bool quit = false;
+	while (!quit) {
+		if (_kbhit()) {
+			char key = _getch();
+
+			if (key == 27) { //esc to quit
+				quit = true;
+			}else if (key == 8) { //back to remove
+				message.pop_back();
+			}
+			else if (key == 13) { // enter to send
+				//the code here doesn't work, it return error (-1)
+				//error code 10057 (socket not connected!)
+				result = send(connectSocket, message.c_str(), (int)strlen(message.c_str()), 0);
+				if (result == SOCKET_ERROR)
+				{
+				printf("send failed with error: %d\n", WSAGetLastError());
+				closesocket(connectSocket);
+				WSACleanup();
+				return 1;
+				}
+				printf("Bytes Sent: %ld\n", result);
+				message = "";
+			}
+			else {
+				message.push_back(key);
+				std::cout << message << std::endl;
+			}
+		}
+
+		if (isConnected) {
+			result = recv(connectSocket, recvbuf, recvbuflen, 0);
+			if (result > 0)
+			{
+				printf("Bytes received: %d\n", result);
+				printf("Message: %s\n", &recvbuf);
+			}
+			else if (result == 0)
+			{
+				printf("Connection closed\n");
+			}
+			else
+			{
+				if (WSAGetLastError() == 10035) {
+					//this error isn't actually bad, it just means we've not received anything
+				}
+				else {
+					printf("Message error happend, opps. time to exit");
+					quit = true;
+				}
+			}
+
+		}
 
 	}
 
