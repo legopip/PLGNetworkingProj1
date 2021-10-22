@@ -139,6 +139,11 @@ std::vector<uint8_t> Buffer::GetBuffer()
 	return buffer;
 }
 
+int Buffer::GetWriteIndex()
+{
+	return indexWrite;
+}
+
 void Buffer::ClearBuffer()
 {
 	buffer.clear();

@@ -9,11 +9,7 @@
 #include <vector>
 #include <string>
 
-//size_t size
 
-// int32_t -> int
-// int16_t -> short
-// int8_t -> char
 
 class Buffer {
 private:
@@ -40,6 +36,7 @@ public:
 	std::string readUInt8BE(int stringSize);
 
 	std::vector<uint8_t> GetBuffer();
+	int GetWriteIndex();
 
 	void ClearBuffer();
 };

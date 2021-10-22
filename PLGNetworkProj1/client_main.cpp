@@ -10,7 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <Buffer.h>
-
+#include <ProtocolTypes.h>
 
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -24,9 +24,31 @@
 Buffer outgoing(DEFAULT_BUFLEN);
 Buffer incoming(DEFAULT_BUFLEN);
 
+
+Buffer MakeProtocol(ProtocolType type, std::string name, std::string room, std::string message)
+{
+	Buffer tempBuf(DEFAULT_BUFLEN);
+
+	if (type == JOIN_ROOM)
+	{
+		tempBuf.writeUInt32BE(name.length());
+		tempBuf.writeUInt8BE(name);
+
+		tempBuf.writeUInt32BE(room.length());
+		tempBuf.writeUInt8BE(room);
+	}
+
+	//length of everything, including header, which is 8 bytes (2 ints)
+	int length = tempBuf.GetWriteIndex() + 8;
+
+
+
+}
+
+
+
 int main(int argc, char **argv)
 {
-	
 	WSADATA wsaData;							// holds Winsock data
 	SOCKET connectSocket = INVALID_SOCKET;		// Our connection socket used to connect to the server
 
