@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <vector>
 
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -32,6 +33,7 @@ int main(int argc, char **argv)
 
 	//const char *sendbuf = "Hello World!";		// The messsage to send to the server
 	std::string message = "";
+	std::vector<std::string> chatlog;
 
 	char recvbuf[DEFAULT_BUFLEN];				// The maximum buffer size of a message to send
 	int result;									// code of the result of any command we use
@@ -141,8 +143,11 @@ int main(int argc, char **argv)
 
 	}*/
 
+	//TODO: login to server/room with special message
+	bool updateLog = false;
 	bool quit = false;
 	while (!quit) {
+
 		if (_kbhit()) {
 			char key = _getch();
 
@@ -167,6 +172,9 @@ int main(int argc, char **argv)
 			}
 			else {
 				message.push_back(key);
+				system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
+				updateLog = true;
+				std::cout << "message: ";
 				std::cout << message << std::endl;
 			}
 		}
@@ -176,7 +184,10 @@ int main(int argc, char **argv)
 			if (result > 0)
 			{
 				printf("Bytes received: %d\n", result);
-				printf("Message: %s\n", &recvbuf);
+				//printf("Message: %s\n", &recvbuf);
+				system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
+				chatlog.push_back(recvbuf);
+				updateLog = true;
 			}
 			else if (result == 0)
 			{
@@ -191,6 +202,15 @@ int main(int argc, char **argv)
 					printf("Message error happend, opps. time to exit");
 					quit = true;
 				}
+			}
+
+			//print out the chat log, if it need to be updated
+			if (updateLog) {
+				for (int i = 0; i < chatlog.size(); i++) {
+					std::cout << chatlog[i] << std::endl;
+				}
+				std::cout << std::endl;
+				updateLog = false;
 			}
 
 		}
