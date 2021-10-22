@@ -1,5 +1,5 @@
 //Buffer.h
-//Gian tullo, 0886424
+//Gian tullo, 0886424 / Lucas Magalhaes
 //290921
 //Outlines the functionality of a TCP Packet buffer
 
@@ -38,4 +38,6 @@ public:
 	void writeUInt8BE(std::string value);
 	std::string readUInt8BE(std::size_t index, int stringSize);
 	std::string readUInt8BE(int stringSize);
+
+	void ClearBuffer();
 };

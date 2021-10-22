@@ -1,5 +1,5 @@
 //Buffer.cpp
-//Gian tullo, 0886424
+//Gian tullo, 0886424 / Lucas Magalhaes
 //290921
 //Implements the functionality of a TCP Packet buffer
 
@@ -12,54 +12,14 @@ Buffer::Buffer(size_t size)
 	indexWrite = 0;
 }
 
-//void Buffer::writeUInt32LE(std::size_t index, int32_t value) 
-//{
-//	buffer[index] = value;
-//	buffer[index + 1] = value >> 8;
-//	buffer[index + 2] = value >> 16;
-//	buffer[index + 3] = value >> 24;
-//}
-
-//void Buffer::writeUInt32LE(int32_t value) 
-//{
-//	//std::size_t index = 0;
-//	//for (; index < buffer.size(); index++) {
-//	//	buffer[index] = value >> index * 8;
-//	//}
-//
-//	buffer[indexWrite] = value;
-//	buffer[indexWrite + 1] = value >> 8;
-//	buffer[indexWrite + 2] = value >> 16;
-//	buffer[indexWrite + 3] = value >> 24;
-//
-//	indexWrite += 4;
-//}
-
-//uint32_t Buffer::readUInt32LE(std::size_t index) 
-//{
-//	uint32_t value = buffer[index];
-//	value |= buffer[index + 1] << 8;
-//	value |= buffer[index + 2] << 16;
-//	value |= buffer[index + 3] << 24;
-//	return value;
-//}
-
-//uint32_t Buffer::readUInt32LE() 
-//{
-//	//std::size_t index = 0;
-//	//uint32_t value = 0;
-//	//for (; index < buffer.size(); index++) {
-//	//	value  |= buffer[index] << index * 8;
-//	//}
-//	//return value;
-//}
-
 void Buffer::writeUInt32BE(std::size_t index, int32_t value) 
 {
-	buffer[index] = value >> 24;
-	buffer[index + 1] = value >> 16;
-	buffer[index + 2] = value >> 8;
-	buffer[index + 3] = value;
+	buffer.insert(buffer.begin() + index, value >> 24);
+	buffer.insert(buffer.begin() + index + 1, value >> 16);
+	buffer.insert(buffer.begin() + index + 2, value >> 8);
+	buffer.insert(buffer.begin() + index + 3, value);
+
+	indexWrite += 4;
 }
 
 void Buffer::writeUInt32BE(int32_t value) 
@@ -95,8 +55,10 @@ uint32_t Buffer::readUInt32BE()
 
 void Buffer::writeUInt16BE(std::size_t index, int16_t value)
 {
-	buffer[index] = value >> 8;
-	buffer[index + 1] = value;
+	buffer.insert(buffer.begin() + index, value >> 8);
+	buffer.insert(buffer.begin() + index + 1, value);
+
+	indexWrite += 2;
 }
 
 void Buffer::writeUInt16BE(int16_t value)
@@ -129,9 +91,12 @@ void Buffer::writeUInt8BE(std::size_t index, std::string value)
 	int charOrder = 0;
 	for (char c : value)
 	{
-		buffer[index + charOrder] = c;
+		//buffer[index + charOrder] = c;
+		buffer.insert(buffer.begin() + index + charOrder, c);
 		charOrder++;
 	}
+
+	indexWrite += charOrder;
 }
 
 void Buffer::writeUInt8BE(std::string value)
@@ -167,4 +132,11 @@ std::string Buffer::readUInt8BE(int stringSize)
 	}
 
 	return output;
+}
+
+void Buffer::ClearBuffer()
+{
+	buffer.clear();
+	indexRead = 0;
+	indexWrite = 0;
 }
