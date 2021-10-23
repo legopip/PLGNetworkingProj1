@@ -9,7 +9,7 @@
 #include <vector>
 #include <string>
 
-
+#include "ProtocolTypes.h"
 
 class Buffer {
 private:
@@ -37,6 +37,8 @@ public:
 
 	std::vector<uint8_t> GetBuffer();
 	int GetWriteIndex();
+
+	std::string PayloadToString(sProtocolData payload);
 
 	void ClearBuffer();
 };
