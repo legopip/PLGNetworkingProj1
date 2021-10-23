@@ -154,6 +154,15 @@ char* Buffer::PayloadToString() {
 	return outboumd;
 }
 
+void Buffer::LoadBuffer(std::string recvd)
+{
+	ClearBuffer();
+	for (char c : recvd)
+	{
+		buffer.push_back(c);
+	}
+}
+
 void Buffer::ClearBuffer()
 {
 	buffer.clear();

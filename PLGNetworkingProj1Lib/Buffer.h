@@ -40,5 +40,7 @@ public:
 
 	char* PayloadToString();
 
+	void LoadBuffer(std::string);
+
 	void ClearBuffer();
 };

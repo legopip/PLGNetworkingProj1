@@ -17,7 +17,7 @@
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
 
-#define DEFAULT_BUFLEN 2048						// Default buffer length of our buffer in characters
+#define DEFAULT_BUFLEN 512						// Default buffer length of our buffer in characters
 #define DEFAULT_PORT "27015"					// The default port to use
 #define SERVER "127.0.0.1"						// The IP of our server
 
@@ -181,8 +181,8 @@ int main(int argc, char **argv)
 
 				sProtocolData data = ParseBuffer(outgoing);
 
-
-				result = send(connectSocket, outgoing.PayloadToString(), outgoing.readUInt32BE(0), 0);
+				char* payload = outgoing.PayloadToString();
+				result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
 				if (result == SOCKET_ERROR)
 				{
 					printf("send failed with error: %d\n", WSAGetLastError());
@@ -190,6 +190,7 @@ int main(int argc, char **argv)
 					WSACleanup();
 					return 1;
 				}
+				delete[] payload;
 				printf("Bytes Sent: %ld\n", result);
 				message = "";
 			}

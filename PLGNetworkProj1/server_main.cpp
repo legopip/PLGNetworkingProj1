@@ -7,12 +7,16 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <Buffer.h>
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
+
+Buffer outgoing(DEFAULT_BUFLEN);
+Buffer ingoing(DEFAULT_BUFLEN);
 
 // Client structure
 struct ClientInfo
@@ -262,13 +266,22 @@ int main(int argc, char** argv)
 					received.push_back(client->dataBuf.buf[i]);
 					//std::cout << client->dataBuf.buf[i] << std::endl;
 
-				int value = 0;
-				value |= client->dataBuf.buf[0] << 24;
-				value |= client->dataBuf.buf[1] << 16;
-				value |= client->dataBuf.buf[2] << 8;
-				value |= client->dataBuf.buf[3];
+				ingoing.LoadBuffer(received);
 
-				printf("The value received is: %d\n", value);
+				uint32_t bufferLenght = ingoing.readUInt32BE();
+				uint32_t messageId = ingoing.readUInt32BE();
+				uint32_t nameLength = ingoing.readUInt32BE();
+				std::string name = ingoing.readUInt8BE(nameLength);
+				uint32_t roomLength = ingoing.readUInt32BE();
+				std::string room = ingoing.readUInt8BE(roomLength);
+
+				//int value = 0;
+				//value |= client->dataBuf.buf[0] << 24;
+				//value |= client->dataBuf.buf[1] << 16;
+				//value |= client->dataBuf.buf[2] << 8;
+				//value |= client->dataBuf.buf[3];
+
+				//printf("The value received is: %d\n", value);
 
 				std::cout << "RECVd: " << received << std::endl;
 
