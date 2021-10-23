@@ -144,20 +144,10 @@ int Buffer::GetWriteIndex()
 	return indexWrite;
 }
 
-std::string Buffer::PayloadToString(sProtocolData payload) {
+std::string Buffer::PayloadToString() {
 	std::string outbound;
-	outbound += (char)payload.type;
-	if (payload.userName != "") {
-		outbound += (char)payload.userName.length();
-		outbound += payload.userName;
-	}
-	if (payload.room != "") {
-		outbound += (char)payload.room.length();
-		outbound += payload.room;
-	}
-	if (payload.message != "") {
-		outbound += (char)payload.message.length();
-		outbound += payload.message;
+	for (int i = 0; i < buffer.size(); i++) {
+		if (buffer[i] != 0) { outbound += (char)buffer[i]; }
 	}
 	return outbound;
 }
