@@ -146,8 +146,9 @@ int Buffer::GetWriteIndex()
 
 std::string Buffer::PayloadToString() {
 	std::string outbound;
-	for (int i = 0; i < buffer.size(); i++) {
-		if (buffer[i] != 0) { outbound += (char)buffer[i]; }
+	int totalLength = readUInt32BE();
+	for (int i = 0; outbound.length() < totalLength; i++) {
+		outbound += (char)buffer[i]; 
 	}
 	return outbound;
 }

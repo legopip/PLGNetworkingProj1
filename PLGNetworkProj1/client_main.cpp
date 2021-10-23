@@ -182,7 +182,7 @@ int main(int argc, char **argv)
 				sProtocolData data = ParseBuffer(outgoing);
 
 
-				result = send(connectSocket, outgoing.PayloadToString().c_str(), (int)strlen(outgoing.PayloadToString().c_str()), 0);
+				result = send(connectSocket, outgoing.PayloadToString().c_str(), outgoing.PayloadToString().length(), 0);
 				if (result == SOCKET_ERROR)
 				{
 					printf("send failed with error: %d\n", WSAGetLastError());
