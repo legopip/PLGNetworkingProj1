@@ -24,6 +24,8 @@
 Buffer outgoing(DEFAULT_BUFLEN);
 Buffer incoming(DEFAULT_BUFLEN);
 
+std::vector<std::string> rooms;
+
 
 Buffer MakeProtocol(ProtocolType type, std::string name, std::string room, std::string message)
 {
@@ -37,12 +39,61 @@ Buffer MakeProtocol(ProtocolType type, std::string name, std::string room, std::
 		tempBuf.writeUInt32BE(room.length());
 		tempBuf.writeUInt8BE(room);
 
-
 		//length of everything, including header, which is 8 bytes (2 ints)
 		int length = tempBuf.GetWriteIndex() + 8;
 		tempBuf.writeUInt32BE(0, length);
 
 		tempBuf.writeUInt32BE(4, JOIN_ROOM);
+
+		rooms.push_back(room);
+	}
+	else if (type == LEAVE_ROOM)
+	{
+		tempBuf.writeUInt32BE(name.length());
+		tempBuf.writeUInt8BE(name);
+
+		tempBuf.writeUInt32BE(room.length());
+		tempBuf.writeUInt8BE(room);
+
+		//length of everything, including header, which is 8 bytes (2 ints)
+		int length = tempBuf.GetWriteIndex() + 8;
+		tempBuf.writeUInt32BE(0, length);
+
+		tempBuf.writeUInt32BE(4, LEAVE_ROOM);
+
+		rooms.push_back(room);
+	}
+	else if (type == SEND_MESSAGE)
+	{
+		tempBuf.writeUInt32BE(name.length());
+		tempBuf.writeUInt8BE(name);
+
+		tempBuf.writeUInt32BE(room.length());
+		tempBuf.writeUInt8BE(room);
+
+		tempBuf.writeUInt32BE(message.length());
+		tempBuf.writeUInt8BE(message);
+
+		int length = tempBuf.GetWriteIndex() + 8;
+		tempBuf.writeUInt32BE(0, length);
+
+		tempBuf.writeUInt32BE(4, SEND_MESSAGE);
+	}
+	else if (type == RECV_MESSAGE) // probably going to delete
+	{
+		tempBuf.writeUInt32BE(name.length());
+		tempBuf.writeUInt8BE(name);
+
+		tempBuf.writeUInt32BE(room.length());
+		tempBuf.writeUInt8BE(room);
+
+		tempBuf.writeUInt32BE(message.length());
+		tempBuf.writeUInt8BE(message);
+
+		int length = tempBuf.GetWriteIndex() + 8;
+		tempBuf.writeUInt32BE(0, length);
+
+		tempBuf.writeUInt32BE(4, RECV_MESSAGE);
 	}
 
 	return tempBuf;
@@ -63,6 +114,34 @@ sProtocolData ParseBuffer(Buffer input)
 		itemLength = input.readUInt32BE();
 		data.room = input.readUInt8BE(itemLength);
 
+		// not sure if this is the right way to do it
+		// or if we are doing this on the loop
+		//data.message = data.userName + " entered " + data.room + " room";
+	}
+	else if (data.type == LEAVE_ROOM)
+	{
+		int itemLength = input.readUInt32BE();
+		data.userName = input.readUInt8BE(itemLength);
+
+		itemLength = input.readUInt32BE();
+		data.room = input.readUInt8BE(itemLength);
+
+		// data.message = data.userName + " left the " + data.room + " room";
+	}
+	else if (data.type == SEND_MESSAGE) // not going to be used
+	{
+
+	}
+	else if (data.type == RECV_MESSAGE)
+	{
+		int itemLength = input.readUInt32BE();
+		data.userName = input.readUInt8BE(itemLength);
+
+		itemLength = input.readUInt32BE();
+		data.room = input.readUInt8BE(itemLength);
+
+		itemLength = input.readUInt32BE();
+		data.message = input.readUInt8BE(itemLength);
 	}
 
 	return data;
@@ -159,7 +238,21 @@ int main(int argc, char **argv)
 	std::cout << "Enter the name of the room you want to join:" << std::endl;
 	std::cin >> roomname;
 	//TODO: form a Login Call with the data
-	
+	outgoing = MakeProtocol(JOIN_ROOM, username, roomname, "");
+
+	sProtocolData data = ParseBuffer(outgoing);
+
+	char* payload = outgoing.PayloadToString();
+	result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
+	if (result == SOCKET_ERROR)
+	{
+		printf("send failed with error: %d\n", WSAGetLastError());
+		closesocket(connectSocket);
+		WSACleanup();
+		return 1;
+	}
+	delete[] payload;
+	printf("Bytes Sent: %ld\n", result);
 	
 	bool updateLog = false;
 	bool quit = false;
@@ -177,21 +270,21 @@ int main(int argc, char **argv)
 				//the code here doesn't work, it return error (-1)
 				//error code 10057 (socket not connected!)
 
-				outgoing = MakeProtocol(JOIN_ROOM, username, roomname, "");
+				//outgoing = MakeProtocol(SEND_MESSAGE, username, roomname, "");
 
-				sProtocolData data = ParseBuffer(outgoing);
+				//sProtocolData data = ParseBuffer(outgoing);
 
-				char* payload = outgoing.PayloadToString();
-				result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
-				if (result == SOCKET_ERROR)
-				{
-					printf("send failed with error: %d\n", WSAGetLastError());
-					closesocket(connectSocket);
-					WSACleanup();
-					return 1;
-				}
-				delete[] payload;
-				printf("Bytes Sent: %ld\n", result);
+				//char* payload = outgoing.PayloadToString();
+				//result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
+				//if (result == SOCKET_ERROR)
+				//{
+				//	printf("send failed with error: %d\n", WSAGetLastError());
+				//	closesocket(connectSocket);
+				//	WSACleanup();
+				//	return 1;
+				//}
+				//delete[] payload;
+				//printf("Bytes Sent: %ld\n", result);
 				message = "";
 			}
 			else {
