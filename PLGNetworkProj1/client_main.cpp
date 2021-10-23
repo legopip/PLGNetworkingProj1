@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 	struct addrinfo hints;
 	u_long mode = 1;
 
-	//const char *sendbuf = "Hello World!";		// The messsage to send to the server
+	// The messsage to send to the server
 	std::string message = "";
 	std::vector<std::string> chatlog;
 

@@ -338,18 +338,6 @@ int main(int argc, char** argv)
 								NULL
 							);
 
-
-							// RecvBytes > 0, we got data
-							/*iResult = WSASend(
-								client->socket,
-								&(client->dataBuf),
-								1,
-								&SentBytes,
-								Flags,
-								NULL,
-								NULL
-							);*/
-
 							// Example using send instead of WSASend...
 							//int iSendResult = send(client->socket, client->dataBuf.buf, iResult, 0);
 

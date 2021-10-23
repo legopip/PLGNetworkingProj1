@@ -1,5 +1,11 @@
 #include "ProtocolHelper.h"
 
+//ProtocolMethods.cpp
+//Gian tullo, 0886424 / Lucas Magalhaes / Philip 
+//231021
+//Provides utility methods for the protocal
+//  see header for method manifest
+
 Buffer ProtocolMethods::MakeProtocol(ProtocolType type, std::string name, std::string room, std::string message)
 {
 	Buffer tempBuf(DEFAULT_BUFLEN);
