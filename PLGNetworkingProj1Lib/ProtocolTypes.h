@@ -1,9 +1,9 @@
 #pragma once
 
-//Buffer.h
+//ProtocolTypes.h
 //Gian tullo, 0886424 / Lucas Magalhaes / Philip 
 //231021
-//Outlines the functionality of a TCP Packet buffer
+//Outlines our protocols
 
 #include <string>
 

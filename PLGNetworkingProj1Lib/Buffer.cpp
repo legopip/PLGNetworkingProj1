@@ -2,6 +2,7 @@
 //Gian tullo, 0886424 / Lucas Magalhaes / Philip
 //231021
 //Provides the functionality of a TCP Packet buffer
+//  See header for method Manifest
 
 #include "Buffer.h";
 

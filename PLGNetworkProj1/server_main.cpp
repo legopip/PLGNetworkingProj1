@@ -262,15 +262,15 @@ int main(int argc, char** argv)
 
 
 
-				std::string received = "";//(client->dataBuf.buf);
-				// buffer.WriteString(received);
-				// packetLength = buffer.ReadUInt32LE();
+				std::string received = "";
 
-				for (int i = 0; i < RecvBytes; i++)
+				for (int i = 0; i < RecvBytes; i++) {
 					received.push_back(client->dataBuf.buf[i]);
+				}
 
 				ingoing.LoadBuffer(received);
 
+				//Parse the mesaage
 				uint32_t bufferLength = ingoing.readUInt32BE();
 				uint32_t messageId = ingoing.readUInt32BE();
 				uint32_t nameLength = ingoing.readUInt32BE();
@@ -278,12 +278,6 @@ int main(int argc, char** argv)
 				uint32_t roomLength = ingoing.readUInt32BE();
 				std::string room = ingoing.readUInt8BE(roomLength);
 
-				
-				//int value = 0;
-				//value |= client->dataBuf.buf[0] << 24;
-				//value |= client->dataBuf.buf[1] << 16;
-				//value |= client->dataBuf.buf[2] << 8;
-				//value |= client->dataBuf.buf[3];
 
 				//printf("The value received is: %d\n", value);
 
