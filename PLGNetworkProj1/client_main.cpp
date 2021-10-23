@@ -31,10 +31,10 @@ Buffer MakeProtocol(ProtocolType type, std::string name, std::string room, std::
 
 	if (type == JOIN_ROOM)
 	{
-		tempBuf.writeUInt32BE((UINT32)name.length());
+		tempBuf.writeUInt32BE(name.length());
 		tempBuf.writeUInt8BE(name);
 
-		tempBuf.writeUInt32BE((UINT32)room.length());
+		tempBuf.writeUInt32BE(room.length());
 		tempBuf.writeUInt8BE(room);
 
 
@@ -58,10 +58,10 @@ sProtocolData ParseBuffer(Buffer input)
 	if (data.type == JOIN_ROOM)
 	{
 		int itemLength = input.readUInt32BE();
-		data.userName = input.readUInt8BE((UINT8)itemLength);
+		data.userName = input.readUInt8BE(itemLength);
 
 		itemLength = input.readUInt32BE();
-		data.room = input.readUInt8BE((UINT8)itemLength);
+		data.room = input.readUInt8BE(itemLength);
 
 	}
 

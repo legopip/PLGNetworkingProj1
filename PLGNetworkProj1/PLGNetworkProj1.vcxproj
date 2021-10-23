@@ -146,6 +146,11 @@
     <ClCompile Include="client_main.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PLGNetworkingProj1Lib\PLGNetworkingProj1Lib.vcxproj">
+      <Project>{7bb63b04-d0af-4881-bfe1-c78393b70fc7}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
