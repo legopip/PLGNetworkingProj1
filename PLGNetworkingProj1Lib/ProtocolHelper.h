@@ -8,6 +8,7 @@
 #define DEFAULT_BUFLEN 512
 
 #include <string>
+#include "Buffer.h"
 
 enum ProtocolType
 {
@@ -26,9 +27,18 @@ struct sProtocolData
 	std::string message;
 };
 
-Buffer MakeProtocol(ProtocolType type, std::string name, std::string room, std::string message);
+
+class ProtocolMethods
+{
+	ProtocolMethods() = delete;
+
+public:
+	static Buffer MakeProtocol(ProtocolType type, std::string name, std::string room, std::string message);
+
+	//Retreives data from the buffer into a more usable format
+	static sProtocolData ParseBuffer(Buffer input);
+};
 
 
 
-//Retreives data from the buffer into a more usable format
-sProtocolData ParseBuffer(Buffer input);
+

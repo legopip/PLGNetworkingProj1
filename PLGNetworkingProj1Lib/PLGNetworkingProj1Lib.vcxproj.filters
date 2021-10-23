@@ -18,7 +18,7 @@
     <ClInclude Include="Buffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ProtocolTypes.h">
+    <ClInclude Include="ProtocolHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

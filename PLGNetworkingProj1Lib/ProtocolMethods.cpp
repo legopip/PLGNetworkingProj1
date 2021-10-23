@@ -1,7 +1,6 @@
-#include "ProtocolTypes.h"
-#include "Buffer.h"
+#include "ProtocolHelper.h"
 
-Buffer MakeProtocol(ProtocolType type, std::string name, std::string room, std::string message)
+Buffer ProtocolMethods::MakeProtocol(ProtocolType type, std::string name, std::string room, std::string message)
 {
 	Buffer tempBuf(DEFAULT_BUFLEN);
 
@@ -73,8 +72,7 @@ Buffer MakeProtocol(ProtocolType type, std::string name, std::string room, std::
 	return tempBuf;
 }
 
-//Retreives data from the buffer into a more usable format
-sProtocolData ParseBuffer(Buffer input)
+sProtocolData ProtocolMethods::ParseBuffer(Buffer input)
 {
 	sProtocolData data;
 	int length;

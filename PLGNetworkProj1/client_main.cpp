@@ -15,7 +15,7 @@
 #include <iostream>
 #include <vector>
 #include <Buffer.h>
-#include <ProtocolTypes.h>
+#include <ProtocolHelper.h>
 
 
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
@@ -125,8 +125,8 @@ int main(int argc, char **argv)
 	std::cin >> roomname;
 
 	//assemble the protocol
-	outgoing = MakeProtocol(JOIN_ROOM, username, roomname, "");//this has no inherent message
-	sProtocolData data = ParseBuffer(outgoing);
+	outgoing = ProtocolMethods::MakeProtocol(JOIN_ROOM, username, roomname, "");//this has no inherent message
+	sProtocolData data = ProtocolMethods::ParseBuffer(outgoing);
 
 	//change it to a format we can transport
 	char* payload = outgoing.PayloadToString();
@@ -163,7 +163,7 @@ int main(int argc, char **argv)
 
 
 				//call to asseble the protocol
-				outgoing = MakeProtocol(SEND_MESSAGE, username, roomname, message);
+				outgoing = ProtocolMethods::MakeProtocol(SEND_MESSAGE, username, roomname, message);
 				//sProtocolData data = ParseBuffer(outgoing);
 
 				//change it to a form we can transport
@@ -208,7 +208,7 @@ int main(int argc, char **argv)
 
 				//Parse the data in the buffer
 
-				sProtocolData data = ParseBuffer(incoming);
+				sProtocolData data = ProtocolMethods::ParseBuffer(incoming);
 
 				//if it comes from a room that we're in, add it to the chat log
 				for (int i = 0; i < rooms.size(); i++) {
@@ -252,8 +252,8 @@ int main(int argc, char **argv)
 	}
 
 	//Leave
-	outgoing = MakeProtocol(LEAVE_ROOM, username, roomname, "");//this has no inherent message
-	sProtocolData leaveData = ParseBuffer(outgoing);
+	outgoing = ProtocolMethods::MakeProtocol(LEAVE_ROOM, username, roomname, "");//this has no inherent message
+	sProtocolData leaveData = ProtocolMethods::ParseBuffer(outgoing);
 
 	//change it to a format we can transport
 	char* leavePayload = outgoing.PayloadToString();

@@ -13,6 +13,7 @@
 #include <string>
 #include <iostream>
 #include <Buffer.h>
+#include <ProtocolHelper.h>
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -270,11 +271,11 @@ int main(int argc, char** argv)
 
 				ingoing.LoadBuffer(received);
 
-				sProtocolData data = ParseBuffer(ingoing);
+				sProtocolData data = ProtocolMethods::ParseBuffer(ingoing);
 
 				if (data.type == JOIN_ROOM)
 				{
-					outgoing = MakeProtocol(RECV_MESSAGE, data.userName, data.room, "Someone has joined this room");
+					outgoing = ProtocolMethods::MakeProtocol(RECV_MESSAGE, data.userName, data.room, "Someone has joined this room");
 
 
 
