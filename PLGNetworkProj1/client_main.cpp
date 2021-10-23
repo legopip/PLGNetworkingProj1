@@ -203,6 +203,7 @@ int main(int argc, char **argv)
 				for (int i = 0; i < recvbuflen; i++) {
 					received.push_back(recvbuf[i]);
 				}
+
 				incoming.LoadBuffer(received);
 
 				//Parse the data in the buffer

@@ -270,19 +270,11 @@ int main(int argc, char** argv)
 
 				ingoing.LoadBuffer(received);
 
-				//Parse the mesaage
-				//uint32_t bufferLength = ingoing.readUInt32BE();
-				//uint32_t messageId = ingoing.readUInt32BE();
-
 				sProtocolData data = ParseBuffer(ingoing);
-
 
 				if (data.type == JOIN_ROOM)
 				{
-					//uint32_t nameLength = ingoing.readUInt32BE();
-					//std::string name = ingoing.readUInt8BE(nameLength);
-					//uint32_t roomLength = ingoing.readUInt32BE();
-					//std::string room = ingoing.readUInt8BE(roomLength);
+					outgoing = MakeProtocol(RECV_MESSAGE, data.userName, data.room, "Someone has joined this room");
 
 
 
@@ -321,11 +313,15 @@ int main(int argc, char** argv)
 					}
 					else
 					{
+						char* payload = outgoing.PayloadToString();
+						WSABUF buf;
+						buf.buf = payload;
+						buf.len = outgoing.readUInt32BE(0);
 						for (int i = 0; i < TotalClients; i++)
 						{
 							iResult = WSASend(
 								ClientArray[i]->socket,
-								&(client->dataBuf), //change this to new buffer
+								&(buf), //change this to new buffer
 								1,
 								&SentBytes,
 								Flags,
