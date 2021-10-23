@@ -1,5 +1,10 @@
 #define WIN32_LEAN_AND_MEAN			// Strip rarely used calls
 
+//server_main.cpp
+//Gian tullo, 0886424 / Lucas Magalhaes /Philip
+//231021
+//A chatroom server, allowing for the sending and receiving of messages
+
 #include <Windows.h>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
@@ -7,12 +12,16 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <Buffer.h>
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
+
+Buffer outgoing(DEFAULT_BUFLEN);
+Buffer ingoing(DEFAULT_BUFLEN);
 
 // Client structure
 struct ClientInfo
@@ -253,17 +262,36 @@ int main(int argc, char** argv)
 
 
 
-				std::string received(client->dataBuf.buf);
-				// buffer.WriteString(received);
-				// packetLength = buffer.ReadUInt32LE();
+				std::string received = "";
 
-				int value = 0;
-				value |= client->dataBuf.buf[0] << 24;
-				value |= client->dataBuf.buf[1] << 16;
-				value |= client->dataBuf.buf[2] << 8;
-				value |= client->dataBuf.buf[3];
+				for (int i = 0; i < RecvBytes; i++) {
+					received.push_back(client->dataBuf.buf[i]);
+				}
 
-				printf("The value received is: %d\n", value);
+				ingoing.LoadBuffer(received);
+
+				//Parse the mesaage
+				//uint32_t bufferLength = ingoing.readUInt32BE();
+				//uint32_t messageId = ingoing.readUInt32BE();
+
+				sProtocolData data = ParseBuffer(ingoing);
+
+
+				if (data.type == JOIN_ROOM)
+				{
+					//uint32_t nameLength = ingoing.readUInt32BE();
+					//std::string name = ingoing.readUInt8BE(nameLength);
+					//uint32_t roomLength = ingoing.readUInt32BE();
+					//std::string room = ingoing.readUInt8BE(roomLength);
+
+
+
+				}
+
+				
+
+
+				//printf("The value received is: %d\n", value);
 
 				std::cout << "RECVd: " << received << std::endl;
 
@@ -297,7 +325,7 @@ int main(int argc, char** argv)
 						{
 							iResult = WSASend(
 								ClientArray[i]->socket,
-								&(client->dataBuf),
+								&(client->dataBuf), //change this to new buffer
 								1,
 								&SentBytes,
 								Flags,

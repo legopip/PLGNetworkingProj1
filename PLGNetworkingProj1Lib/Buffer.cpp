@@ -1,7 +1,8 @@
 //Buffer.cpp
-//Gian tullo, 0886424 / Lucas Magalhaes
-//290921
-//Implements the functionality of a TCP Packet buffer
+//Gian tullo, 0886424 / Lucas Magalhaes / Philip
+//231021
+//Provides the functionality of a TCP Packet buffer
+//  See header for method Manifest
 
 #include "Buffer.h";
 
@@ -127,11 +128,39 @@ std::string Buffer::readUInt8BE(int stringSize)
 	std::string output = "";
 	for (int i = 0; i < stringSize; i++)
 	{
-		output.push_back(buffer[indexRead + i]);
+		output.push_back(buffer[indexRead]);
 		indexRead++;
 	}
 
 	return output;
+}
+
+std::vector<uint8_t> Buffer::GetBuffer()
+{
+	return buffer;
+}
+
+int Buffer::GetWriteIndex()
+{
+	return indexWrite;
+}
+
+char* Buffer::PayloadToString() {
+	int totalLength = readUInt32BE();
+	char* outbound = new char[totalLength];
+	for (int i = 0; i < totalLength; i++) {
+		outbound[i] = buffer[i]; 
+	}
+	return outbound;
+}
+
+void Buffer::LoadBuffer(std::string recvd)
+{
+	ClearBuffer();
+	for (char c : recvd)
+	{
+		buffer.push_back(c);
+	}
 }
 
 void Buffer::ClearBuffer()
