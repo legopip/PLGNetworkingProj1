@@ -126,8 +126,6 @@ int main(int argc, char **argv)
 				message.pop_back();
 			}
 			else if (key == 13) { // enter to send
-				//the code here doesn't work, it return error (-1)
-				//error code 10057 (socket not connected!)
 				result = send(connectSocket, message.c_str(), (int)strlen(message.c_str()), 0);
 				if (result == SOCKET_ERROR)
 				{
