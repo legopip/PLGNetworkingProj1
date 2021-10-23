@@ -17,7 +17,7 @@
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
 
-#define DEFAULT_BUFLEN 512						// Default buffer length of our buffer in characters
+#define DEFAULT_BUFLEN 2048						// Default buffer length of our buffer in characters
 #define DEFAULT_PORT "27015"					// The default port to use
 #define SERVER "127.0.0.1"						// The IP of our server
 

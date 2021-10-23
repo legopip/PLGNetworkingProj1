@@ -127,7 +127,7 @@ std::string Buffer::readUInt8BE(int stringSize)
 	std::string output = "";
 	for (int i = 0; i < stringSize; i++)
 	{
-		output.push_back(buffer[indexRead + i]);
+		output.push_back(buffer[indexRead]);
 		indexRead++;
 	}
 
