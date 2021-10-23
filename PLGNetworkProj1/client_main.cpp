@@ -237,7 +237,7 @@ int main(int argc, char **argv)
 	std::cin >> username;
 	std::cout << "Enter the name of the room you want to join:" << std::endl;
 	std::cin >> roomname;
-	//TODO: form a Login Call with the data
+
 	outgoing = MakeProtocol(JOIN_ROOM, username, roomname, "");
 
 	sProtocolData data = ParseBuffer(outgoing);
@@ -252,6 +252,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	delete[] payload;
+	//rooms.push_back(roomname);
 	printf("Bytes Sent: %ld\n", result);
 	
 	bool updateLog = false;
@@ -265,26 +266,25 @@ int main(int argc, char **argv)
 				quit = true;
 			}else if (key == 8) { //back to remove
 				message.pop_back();
+				updateLog = true;
 			}
 			else if (key == 13) { // enter to send
-				//the code here doesn't work, it return error (-1)
-				//error code 10057 (socket not connected!)
 
-				//outgoing = MakeProtocol(SEND_MESSAGE, username, roomname, "");
+				outgoing = MakeProtocol(SEND_MESSAGE, username, roomname, message);
 
-				//sProtocolData data = ParseBuffer(outgoing);
+				sProtocolData data = ParseBuffer(outgoing);
 
-				//char* payload = outgoing.PayloadToString();
-				//result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
-				//if (result == SOCKET_ERROR)
-				//{
-				//	printf("send failed with error: %d\n", WSAGetLastError());
-				//	closesocket(connectSocket);
-				//	WSACleanup();
-				//	return 1;
-				//}
-				//delete[] payload;
-				//printf("Bytes Sent: %ld\n", result);
+				char* payload = outgoing.PayloadToString();
+				result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
+				if (result == SOCKET_ERROR)
+				{
+					printf("send failed with error: %d\n", WSAGetLastError());
+					closesocket(connectSocket);
+					WSACleanup();
+					return 1;
+				}
+				delete[] payload;
+				printf("Bytes Sent: %ld\n", result);
 				message = "";
 			}
 			else {
@@ -299,11 +299,35 @@ int main(int argc, char **argv)
 			result = recv(connectSocket, recvbuf, recvbuflen, 0);
 			if (result > 0)
 			{
+				
 				printf("Bytes received: %d\n", result);
-				//printf("Message: %s\n", &recvbuf);
+					//std::string inbound = "";
+					//for (int i = 0; i < recvbuflen; i++) {
+					//	if (recvbuf[i] != '\0') { inbound += recvbuf[i]; }
+					//}
+				std::string received = "";
+				for (int i = 0; i < recvbuflen; i++) {
+					received.push_back(recvbuf[i]);
+				}
+				//std::cout << client->dataBuf.buf[i] << std::endl;
+
+				incoming.LoadBuffer(received);
+
+				uint32_t bufferLength = incoming.readUInt32BE();
+				uint32_t messageId = incoming.readUInt32BE();
+				uint32_t nameLength = incoming.readUInt32BE();
+				std::string name = incoming.readUInt8BE(nameLength);
+				uint32_t roomLength = incoming.readUInt32BE();
+				std::string room = incoming.readUInt8BE(roomLength);
+				uint32_t msgLength = incoming.readUInt32BE();
+				std::string msg = incoming.readUInt8BE(msgLength);
+
 				system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
-				chatlog.push_back(recvbuf);
-				updateLog = true;
+				//chatlog.push_back(inbound);
+				for (int i = 0; i < rooms.size(); i++) {
+					if (rooms[i] == room) { chatlog.push_back(name + ":\t" + msg); }
+					updateLog = true;
+				}
 			}
 			else if (result == 0)
 			{

@@ -145,13 +145,12 @@ int Buffer::GetWriteIndex()
 }
 
 char* Buffer::PayloadToString() {
-	//std::string outbound;
 	int totalLength = readUInt32BE();
-	char* outboumd = new char[totalLength];
+	char* outbound = new char[totalLength];
 	for (int i = 0; i < totalLength; i++) {
-		outboumd[i] = buffer[i]; 
+		outbound[i] = buffer[i]; 
 	}
-	return outboumd;
+	return outbound;
 }
 
 void Buffer::LoadBuffer(std::string recvd)

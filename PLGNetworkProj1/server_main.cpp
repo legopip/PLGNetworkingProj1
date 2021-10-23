@@ -261,20 +261,23 @@ int main(int argc, char** argv)
 				// buffer.WriteString(received);
 				// packetLength = buffer.ReadUInt32LE();
 
-				//printf("%d", client->dataBuf.buf + 3);
 				for (int i = 0; i < RecvBytes; i++)
 					received.push_back(client->dataBuf.buf[i]);
-					//std::cout << client->dataBuf.buf[i] << std::endl;
 
 				ingoing.LoadBuffer(received);
 
-				uint32_t bufferLenght = ingoing.readUInt32BE();
+				uint32_t bufferLength = ingoing.readUInt32BE();
 				uint32_t messageId = ingoing.readUInt32BE();
 				uint32_t nameLength = ingoing.readUInt32BE();
 				std::string name = ingoing.readUInt8BE(nameLength);
 				uint32_t roomLength = ingoing.readUInt32BE();
 				std::string room = ingoing.readUInt8BE(roomLength);
 
+				if (messageId == JOIN_ROOM) {
+					std::string msg = "Has joined room " + room;
+					//TODO: add this to the buffer being sent back
+				}
+				
 				//int value = 0;
 				//value |= client->dataBuf.buf[0] << 24;
 				//value |= client->dataBuf.buf[1] << 16;
