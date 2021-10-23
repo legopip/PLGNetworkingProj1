@@ -119,9 +119,9 @@ int main(int argc, char **argv)
 	//this is blocking, but that okay since we're no in a room yet
 	std::string username = "";
 	std::string roomname = "";
-	std::cout << "Enter your username:" << std::endl;
+	std::cout << "Enter your username: ";
 	std::cin >> username;
-	std::cout << "Enter the name of the room you want to join:" << std::endl;
+	std::cout << "Enter the name of the room you want to join: ";
 	std::cin >> roomname;
 
 	//assemble the protocol
@@ -163,34 +163,142 @@ int main(int argc, char **argv)
 			}
 			else if (key == 13) { // enter to send
 
-
-				//call to asseble the protocol
-				outgoing = ProtocolMethods::MakeProtocol(SEND_MESSAGE, username, roomname, message);
-				//sProtocolData data = ParseBuffer(outgoing);
-
-				//change it to a form we can transport
-				char* payload = outgoing.PayloadToString();
-				//send it
-				result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
-
-				if (result == SOCKET_ERROR)
+				if (message[0] == '/') // is a command
 				{
-					printf("send failed with error: %d\n", WSAGetLastError());
-					closesocket(connectSocket);
-					WSACleanup();
-					return 1;
-				}
+					size_t pos = message.find(" ");
+					std::string command = message.substr(0, pos);
+					message.erase(0, pos + 1);
 
-				//clean up
-				delete[] payload;
-				printf("Bytes Sent: %ld\n", result);
+					if (command == "/join" || command == "/j")
+					{
+						if (std::count(rooms.begin(), rooms.end(), message))
+						{
+							chatlog.push_back("You are already in the room " + message);
+						}
+						else
+						{
+							//assemble the protocol
+							outgoing = ProtocolMethods::MakeProtocol(JOIN_ROOM, username, message, "");//this has no inherent message
+							sProtocolData data = ProtocolMethods::ParseBuffer(outgoing);
+
+							//change it to a format we can transport
+							char* payload = outgoing.PayloadToString();
+							//send it
+							result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
+							if (result == SOCKET_ERROR)
+							{
+								printf("send failed with error: %d\n", WSAGetLastError());
+								closesocket(connectSocket);
+								WSACleanup();
+								return 1;
+							}
+
+							rooms.push_back(message);
+
+							//clean up
+							delete[] payload;
+							printf("Bytes Sent: %ld\n", result);
+						}
+					}
+					else if (command == "/message" || command == "/m")
+					{
+						pos = message.find(" ");
+						std::string room = message.substr(0, pos);
+						message.erase(0, pos + 1);
+
+						if (std::count(rooms.begin(), rooms.end(), room) == 0)
+						{
+							chatlog.push_back("You currently aren't in the room " + room);
+						}
+						else
+						{
+							//call to asseble the protocol
+							outgoing = ProtocolMethods::MakeProtocol(SEND_MESSAGE, username, room, message);
+							//sProtocolData data = ParseBuffer(outgoing);
+
+							//change it to a form we can transport
+							char* payload = outgoing.PayloadToString();
+							//send it
+							result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
+
+							if (result == SOCKET_ERROR)
+							{
+								printf("send failed with error: %d\n", WSAGetLastError());
+								closesocket(connectSocket);
+								WSACleanup();
+								return 1;
+							}
+
+							//clean up
+							delete[] payload;
+							printf("Bytes Sent: %ld\n", result);
+						}
+					}
+					else if (command == "/leave" || command == "/l")
+					{
+						if (std::count(rooms.begin(), rooms.end(), message) == 0)
+						{
+							chatlog.push_back("You currently aren't in the room " + message);
+						}
+						else
+						{
+							//Leave
+							outgoing = ProtocolMethods::MakeProtocol(LEAVE_ROOM, username, message, "");
+							sProtocolData leaveData = ProtocolMethods::ParseBuffer(outgoing);
+
+							//change it to a format we can transport
+							char* leavePayload = outgoing.PayloadToString();
+							//send it
+							result = send(connectSocket, leavePayload, outgoing.readUInt32BE(0), 0);
+							if (result == SOCKET_ERROR)
+							{
+								printf("send failed with error: %d\n", WSAGetLastError());
+								closesocket(connectSocket);
+								WSACleanup();
+								return 1;
+							}
+
+							//clean up
+							delete[] leavePayload;
+							printf("Bytes Sent: %ld\n", result);
+							rooms.erase(std::find(rooms.begin(), rooms.end(), message));
+						}
+					}
+					else
+					{
+						chatlog.push_back("Please for the love of god enter a valid command you eejit");
+					}
+
+				}
+				else
+				{
+					////call to asseble the protocol
+					//outgoing = ProtocolMethods::MakeProtocol(SEND_MESSAGE, username, roomname, message);
+					////sProtocolData data = ParseBuffer(outgoing);
+
+					////change it to a form we can transport
+					//char* payload = outgoing.PayloadToString();
+					////send it
+					//result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
+
+					//if (result == SOCKET_ERROR)
+					//{
+					//	printf("send failed with error: %d\n", WSAGetLastError());
+					//	closesocket(connectSocket);
+					//	WSACleanup();
+					//	return 1;
+					//}
+
+					////clean up
+					//delete[] payload;
+					//printf("Bytes Sent: %ld\n", result);
+				}
 				message = "";
 			}
 			else {
 				message.push_back(key);
 				system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
-				updateLog = true;
-				
+				updateLog = true;				
 			}
 		}
 
@@ -253,25 +361,28 @@ int main(int argc, char **argv)
 
 	}
 
-	//Leave
-	outgoing = ProtocolMethods::MakeProtocol(LEAVE_ROOM, username, roomname, "");//this has no inherent message
-	sProtocolData leaveData = ProtocolMethods::ParseBuffer(outgoing);
-
-	//change it to a format we can transport
-	char* leavePayload = outgoing.PayloadToString();
-	//send it
-	result = send(connectSocket, leavePayload, outgoing.readUInt32BE(0), 0);
-	if (result == SOCKET_ERROR)
+	for (int i = 0; i < rooms.size(); i++)
 	{
-		printf("send failed with error: %d\n", WSAGetLastError());
-		closesocket(connectSocket);
-		WSACleanup();
-		return 1;
-	}
+		//Leave
+		outgoing = ProtocolMethods::MakeProtocol(LEAVE_ROOM, username, rooms[i], "");//this has no inherent message
+		sProtocolData leaveData = ProtocolMethods::ParseBuffer(outgoing);
 
-	//clean up
-	delete[] leavePayload;
-	printf("Bytes Sent: %ld\n", result);
+		//change it to a format we can transport
+		char* leavePayload = outgoing.PayloadToString();
+		//send it
+		result = send(connectSocket, leavePayload, outgoing.readUInt32BE(0), 0);
+		if (result == SOCKET_ERROR)
+		{
+			printf("send failed with error: %d\n", WSAGetLastError());
+			closesocket(connectSocket);
+			WSACleanup();
+			return 1;
+		}
+
+		//clean up
+		delete[] leavePayload;
+		printf("Bytes Sent: %ld\n", result);
+	}
 
 	// Step #5 shutdown the connection since no more data will be sent
 	result = shutdown(connectSocket, SD_SEND);
