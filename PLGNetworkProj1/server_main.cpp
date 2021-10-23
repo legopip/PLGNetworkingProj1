@@ -11,7 +11,7 @@
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
-#define DEFAULT_BUFLEN 2048
+#define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
 
 // Client structure
@@ -253,9 +253,14 @@ int main(int argc, char** argv)
 
 
 
-				std::string received(client->dataBuf.buf);
+				std::string received = "";//(client->dataBuf.buf);
 				// buffer.WriteString(received);
 				// packetLength = buffer.ReadUInt32LE();
+
+				//printf("%d", client->dataBuf.buf + 3);
+				for (int i = 0; i < RecvBytes; i++)
+					received.push_back(client->dataBuf.buf[i]);
+					//std::cout << client->dataBuf.buf[i] << std::endl;
 
 				int value = 0;
 				value |= client->dataBuf.buf[0] << 24;

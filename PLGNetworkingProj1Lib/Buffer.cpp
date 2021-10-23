@@ -144,13 +144,14 @@ int Buffer::GetWriteIndex()
 	return indexWrite;
 }
 
-std::string Buffer::PayloadToString() {
-	std::string outbound;
+char* Buffer::PayloadToString() {
+	//std::string outbound;
 	int totalLength = readUInt32BE();
-	for (int i = 0; outbound.length() < totalLength; i++) {
-		outbound += (char)buffer[i]; 
+	char* outboumd = new char[totalLength];
+	for (int i = 0; i < totalLength; i++) {
+		outboumd[i] = buffer[i]; 
 	}
-	return outbound;
+	return outboumd;
 }
 
 void Buffer::ClearBuffer()

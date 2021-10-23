@@ -38,7 +38,7 @@ public:
 	std::vector<uint8_t> GetBuffer();
 	int GetWriteIndex();
 
-	std::string PayloadToString();
+	char* PayloadToString();
 
 	void ClearBuffer();
 };
