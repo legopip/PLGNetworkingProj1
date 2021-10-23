@@ -1,10 +1,18 @@
 #include "ProtocolHelper.h"
 
 //ProtocolMethods.cpp
-//Gian tullo, 0886424 / Lucas Magalhaes / Philip 
+//Gian tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
 //231021
 //Provides utility methods for the protocal
 //  see header for method manifest
+
+//Protocol structure
+/*
+	JOIN_ROOM :  [header][len][name][len][roomName]
+	LEAVE_ROOM:  [header][len][name][len][roomName]
+	SEND_MSG:    [header][len][name][len][roomName][len][message]
+	RECV_MSG:    [header][len][name][len][roomName][len][message]
+*/
 
 Buffer ProtocolMethods::MakeProtocol(ProtocolType type, std::string name, std::string room, std::string message)
 {
@@ -24,7 +32,7 @@ Buffer ProtocolMethods::MakeProtocol(ProtocolType type, std::string name, std::s
 
 		tempBuf.writeUInt32BE(4, JOIN_ROOM);
 
-		//rooms.push_back(room);
+		
 	}
 	else if (type == LEAVE_ROOM)
 	{
@@ -40,7 +48,6 @@ Buffer ProtocolMethods::MakeProtocol(ProtocolType type, std::string name, std::s
 
 		tempBuf.writeUInt32BE(4, LEAVE_ROOM);
 
-		//rooms.push_back(room);
 	}
 	else if (type == SEND_MESSAGE)
 	{
@@ -58,7 +65,7 @@ Buffer ProtocolMethods::MakeProtocol(ProtocolType type, std::string name, std::s
 
 		tempBuf.writeUInt32BE(4, SEND_MESSAGE);
 	}
-	else if (type == RECV_MESSAGE) // probably going to delete
+	else if (type == RECV_MESSAGE) 
 	{
 		tempBuf.writeUInt32BE(name.length());
 		tempBuf.writeUInt8BE(name);
@@ -93,8 +100,7 @@ sProtocolData ProtocolMethods::ParseBuffer(Buffer input)
 		itemLength = input.readUInt32BE();
 		data.room = input.readUInt8BE(itemLength);
 
-		// not sure if this is the right way to do it
-		// or if we are doing this on the loop
+		//construct the message
 		data.message = data.userName + " entered " + data.room + " room";
 	}
 	else if (data.type == LEAVE_ROOM)
@@ -105,9 +111,10 @@ sProtocolData ProtocolMethods::ParseBuffer(Buffer input)
 		itemLength = input.readUInt32BE();
 		data.room = input.readUInt8BE(itemLength);
 
+		//construct the message
 		data.message = data.userName + " left the " + data.room + " room";
 	}
-	else if (data.type == SEND_MESSAGE) // not going to be used
+	else if (data.type == SEND_MESSAGE) 
 	{
 		uint32_t nameLength = input.readUInt32BE();
 		data.userName = input.readUInt8BE(nameLength);

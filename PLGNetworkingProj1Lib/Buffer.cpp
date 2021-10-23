@@ -1,10 +1,10 @@
 //Buffer.cpp
-//Gian tullo, 0886424 / Lucas Magalhaes / Philip
+//Gian tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
 //231021
 //Provides the functionality of a TCP Packet buffer
 //  See header for method Manifest
 
-#include "Buffer.h";
+#include "Buffer.h"
 
 Buffer::Buffer(size_t size) 
 {
@@ -25,6 +25,11 @@ void Buffer::writeUInt32BE(std::size_t index, int32_t value)
 
 void Buffer::writeUInt32BE(int32_t value) 
 {
+	if (indexWrite >= buffer.size())
+	{
+		buffer.resize(indexWrite + 4);
+	}
+
 	buffer[indexWrite] = value >> 24;
 	buffer[indexWrite + 1] = value >> 16;
 	buffer[indexWrite + 2] = value >> 8;
@@ -56,6 +61,7 @@ uint32_t Buffer::readUInt32BE()
 
 void Buffer::writeUInt16BE(std::size_t index, int16_t value)
 {
+
 	buffer.insert(buffer.begin() + index, value >> 8);
 	buffer.insert(buffer.begin() + index + 1, value);
 
@@ -64,6 +70,10 @@ void Buffer::writeUInt16BE(std::size_t index, int16_t value)
 
 void Buffer::writeUInt16BE(int16_t value)
 {
+	if (indexWrite >= buffer.size())
+	{
+		buffer.resize(indexWrite + 2);
+	}
 	buffer[indexWrite] = value >> 8;
 	buffer[indexWrite + 1] = value;
 
@@ -102,6 +112,11 @@ void Buffer::writeUInt8BE(std::size_t index, std::string value)
 
 void Buffer::writeUInt8BE(std::string value)
 {
+	if (indexWrite >= buffer.size())
+	{
+		buffer.resize(indexWrite + value.length());
+	}
+
 	int charOrder = 0;
 	for (char c : value)
 	{

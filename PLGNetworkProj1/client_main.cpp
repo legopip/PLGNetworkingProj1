@@ -1,7 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 //client_main.cpp
-//Gian tullo, 0886424 / Lucas Magalhaes / Philip
+//Gian tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
 //231021
 //A chatroom client, allowing for the sending and receiving of messages
 
@@ -165,6 +165,8 @@ int main(int argc, char **argv)
 			}
 			else if (key == 13) { // enter to send
 
+				helpRequested = false; //remove the help
+				
 				if (message[0] == '/') // is a command
 				{
 					size_t pos = message.find(" ");
@@ -342,7 +344,7 @@ int main(int argc, char **argv)
 					std::cout << "/message [room]: sends a message to the room" << std::endl;
 					std::cout << "/leave [room]: leaves the room" << std::endl;
 					//make sure this isn't always on
-					helpRequested = false;
+					//helpRequested = false;
 				}
 				else {
 					std::cout << "type /help for a list of commands" << std::endl;

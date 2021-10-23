@@ -1,7 +1,7 @@
 #define WIN32_LEAN_AND_MEAN			// Strip rarely used calls
 
 //server_main.cpp
-//Gian tullo, 0886424 / Lucas Magalhaes /Philip
+//Gian tullo, 0886424 / Lucas Magalhaes /Philip Tomaszewski
 //231021
 //A chatroom server, allowing for the sending and receiving of messages
 
@@ -53,6 +53,7 @@ void RemoveClient(int index)
 
 	// We also need to cleanup the ClientInfo data
 	// TODO: Delete Client
+	delete client;
 }
 
 int main(int argc, char** argv)
@@ -171,7 +172,7 @@ int main(int argc, char** argv)
 
 	FD_SET ReadSet;
 	int total;
-	DWORD flags;
+	//DWORD flags;
 	DWORD RecvBytes;
 	DWORD SentBytes;
 
@@ -265,7 +266,7 @@ int main(int argc, char** argv)
 
 				std::string received = "";
 
-				for (int i = 0; i < RecvBytes; i++) {
+				for (DWORD i = 0; i < RecvBytes; i++) {
 					received.push_back(client->dataBuf.buf[i]);
 				}
 
@@ -289,10 +290,6 @@ int main(int argc, char** argv)
 				}
 
 				
-
-
-				//printf("The value received is: %d\n", value);
-
 				std::cout << "RECVd: " << received << std::endl;
 
 				if (iResult == SOCKET_ERROR)
@@ -330,7 +327,7 @@ int main(int argc, char** argv)
 						{
 							iResult = WSASend(
 								ClientArray[i]->socket,
-								&(buf), //change this to new buffer
+								&(buf), 
 								1,
 								&SentBytes,
 								Flags,
@@ -354,15 +351,12 @@ int main(int argc, char** argv)
 								printf("Successfully sent %d bytes!\n", SentBytes);
 							}
 						}
-						delete[] payload;
+						delete[] payload; //clean the payload
 					}
 				}
 			}
 		}
-
 	}
-
-
 
 	// #6 close
 	iResult = shutdown(acceptSocket, SD_SEND);

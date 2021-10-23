@@ -1,7 +1,7 @@
 #pragma once
 
 //ProtocolHelper.h
-//Gian tullo, 0886424 / Lucas Magalhaes / Philip 
+//Gian tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
 //231021
 //Outlines our protocols
 
