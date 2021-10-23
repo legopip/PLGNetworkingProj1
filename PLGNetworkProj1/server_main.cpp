@@ -271,12 +271,24 @@ int main(int argc, char** argv)
 				ingoing.LoadBuffer(received);
 
 				//Parse the mesaage
-				uint32_t bufferLength = ingoing.readUInt32BE();
-				uint32_t messageId = ingoing.readUInt32BE();
-				uint32_t nameLength = ingoing.readUInt32BE();
-				std::string name = ingoing.readUInt8BE(nameLength);
-				uint32_t roomLength = ingoing.readUInt32BE();
-				std::string room = ingoing.readUInt8BE(roomLength);
+				//uint32_t bufferLength = ingoing.readUInt32BE();
+				//uint32_t messageId = ingoing.readUInt32BE();
+
+				sProtocolData data = ParseBuffer(ingoing);
+
+
+				if (data.type == JOIN_ROOM)
+				{
+					//uint32_t nameLength = ingoing.readUInt32BE();
+					//std::string name = ingoing.readUInt8BE(nameLength);
+					//uint32_t roomLength = ingoing.readUInt32BE();
+					//std::string room = ingoing.readUInt8BE(roomLength);
+
+
+
+				}
+
+				
 
 
 				//printf("The value received is: %d\n", value);
@@ -313,7 +325,7 @@ int main(int argc, char** argv)
 						{
 							iResult = WSASend(
 								ClientArray[i]->socket,
-								&(client->dataBuf),
+								&(client->dataBuf), //change this to new buffer
 								1,
 								&SentBytes,
 								Flags,
