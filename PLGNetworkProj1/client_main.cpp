@@ -149,6 +149,8 @@ int main(int argc, char **argv)
 	//start Client loop
 	bool updateLog = false;
 	bool quit = false;
+	bool helpRequested = false;
+	bool invalidCommand = false;
 	while (!quit) {
 
 		//get keyboard input
@@ -169,7 +171,10 @@ int main(int argc, char **argv)
 					std::string command = message.substr(0, pos);
 					message.erase(0, pos + 1);
 
-					if (command == "/join" || command == "/j")
+					if (command == "/help" || command == "/h") {
+						helpRequested = true;
+						updateLog;
+					}else if (command == "/join" || command == "/j")
 					{
 						if (std::count(rooms.begin(), rooms.end(), message))
 						{
@@ -264,36 +269,10 @@ int main(int argc, char **argv)
 							rooms.erase(std::find(rooms.begin(), rooms.end(), message));
 						}
 					}
-					else
-					{
-						chatlog.push_back("Please for the love of god enter a valid command you eejit");
-					}
-
 				}
-				else
-				{
-					////call to asseble the protocol
-					//outgoing = ProtocolMethods::MakeProtocol(SEND_MESSAGE, username, roomname, message);
-					////sProtocolData data = ParseBuffer(outgoing);
-
-					////change it to a form we can transport
-					//char* payload = outgoing.PayloadToString();
-					////send it
-					//result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
-
-					//if (result == SOCKET_ERROR)
-					//{
-					//	printf("send failed with error: %d\n", WSAGetLastError());
-					//	closesocket(connectSocket);
-					//	WSACleanup();
-					//	return 1;
-					//}
-
-					////clean up
-					//delete[] payload;
-					//printf("Bytes Sent: %ld\n", result);
-				}
+				else{ invalidCommand = true; }
 				message = "";
+				updateLog = true;
 			}
 			else {
 				message.push_back(key);
@@ -351,6 +330,23 @@ int main(int argc, char **argv)
 					std::cout << chatlog[i] << std::endl;
 				}
 				std::cout << std::endl;
+				//User feedback
+				if (invalidCommand) {
+					printf("\x1B[91m%s\033[0m\n", "!Invalid Command!");
+					invalidCommand = false;
+				}
+				if (helpRequested) {
+					//print out list of commands
+					std::cout << "/help: get list of commands" << std::endl;
+					std::cout << "/join [room]: joins the room" << std::endl;
+					std::cout << "/message [room]: sends a message to the room" << std::endl;
+					std::cout << "/leave [room]: leaves the room" << std::endl;
+					//make sure this isn't always on
+					helpRequested = false;
+				}
+				else {
+					std::cout << "type /help for a list of commands" << std::endl;
+				}
 				//user input
 				std::cout << "message: ";
 				std::cout << message << std::endl;
