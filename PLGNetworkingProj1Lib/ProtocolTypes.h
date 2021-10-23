@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 enum ProtocolType
 {
@@ -6,4 +7,13 @@ enum ProtocolType
 	LEAVE_ROOM,
 	SEND_MESSAGE,
 	RECV_MESSAGE
+};
+
+
+struct sProtocolData
+{
+	ProtocolType type;
+	std::string userName;
+	std::string room;
+	std::string message;
 };

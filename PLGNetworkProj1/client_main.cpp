@@ -31,20 +31,42 @@ Buffer MakeProtocol(ProtocolType type, std::string name, std::string room, std::
 
 	if (type == JOIN_ROOM)
 	{
-		tempBuf.writeUInt32BE(name.length());
+		tempBuf.writeUInt32BE((UINT32)name.length());
 		tempBuf.writeUInt8BE(name);
 
-		tempBuf.writeUInt32BE(room.length());
+		tempBuf.writeUInt32BE((UINT32)room.length());
 		tempBuf.writeUInt8BE(room);
+
+
+		//length of everything, including header, which is 8 bytes (2 ints)
+		int length = tempBuf.GetWriteIndex() + 8;
+		tempBuf.writeUInt32BE(0, length);
+
+		tempBuf.writeUInt32BE(4, JOIN_ROOM);
 	}
 
-	//length of everything, including header, which is 8 bytes (2 ints)
-	int length = tempBuf.GetWriteIndex() + 8;
-
-
-
+	return tempBuf;
 }
 
+sProtocolData ParseBuffer(Buffer input)
+{
+	sProtocolData data;
+	int length;
+	length = input.readUInt32BE();
+	data.type = (ProtocolType)input.readUInt32BE();
+	
+	if (data.type == JOIN_ROOM)
+	{
+		int itemLength = input.readUInt32BE();
+		data.userName = input.readUInt8BE((UINT8)itemLength);
+
+		itemLength = input.readUInt32BE();
+		data.room = input.readUInt8BE((UINT8)itemLength);
+
+	}
+
+	return data;
+}
 
 
 int main(int argc, char **argv)
@@ -154,13 +176,19 @@ int main(int argc, char **argv)
 			else if (key == 13) { // enter to send
 				//the code here doesn't work, it return error (-1)
 				//error code 10057 (socket not connected!)
+
+				outgoing = MakeProtocol(JOIN_ROOM, username, roomname, "");
+
+				sProtocolData data = ParseBuffer(outgoing);
+
+
 				result = send(connectSocket, message.c_str(), (int)strlen(message.c_str()), 0);
 				if (result == SOCKET_ERROR)
 				{
-				printf("send failed with error: %d\n", WSAGetLastError());
-				closesocket(connectSocket);
-				WSACleanup();
-				return 1;
+					printf("send failed with error: %d\n", WSAGetLastError());
+					closesocket(connectSocket);
+					WSACleanup();
+					return 1;
 				}
 				printf("Bytes Sent: %ld\n", result);
 				message = "";
