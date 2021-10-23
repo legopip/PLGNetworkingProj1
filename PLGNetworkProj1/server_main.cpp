@@ -273,12 +273,19 @@ int main(int argc, char** argv)
 
 				sProtocolData data = ProtocolMethods::ParseBuffer(ingoing);
 
+				//setup buffer for messages to the clients
 				if (data.type == JOIN_ROOM)
 				{
-					outgoing = ProtocolMethods::MakeProtocol(RECV_MESSAGE, data.userName, data.room, "Someone has joined this room");
+					outgoing = ProtocolMethods::MakeProtocol(RECV_MESSAGE, "Server", data.room, data.message);
 
-
-
+				}
+				else if (data.type == SEND_MESSAGE)
+				{
+					outgoing = ProtocolMethods::MakeProtocol(RECV_MESSAGE, data.userName, data.room, data.message);
+				}
+				else if (data.type == LEAVE_ROOM)
+				{
+					outgoing = ProtocolMethods::MakeProtocol(RECV_MESSAGE, "Server", data.room, data.message);
 				}
 
 				
@@ -318,6 +325,7 @@ int main(int argc, char** argv)
 						WSABUF buf;
 						buf.buf = payload;
 						buf.len = outgoing.readUInt32BE(0);
+
 						for (int i = 0; i < TotalClients; i++)
 						{
 							iResult = WSASend(
@@ -358,6 +366,7 @@ int main(int argc, char** argv)
 								printf("Successfully sent %d bytes!\n", SentBytes);
 							}
 						}
+						delete[] payload;
 					}
 				}
 			}

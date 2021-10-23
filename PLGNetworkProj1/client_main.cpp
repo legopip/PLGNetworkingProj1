@@ -140,6 +140,8 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	rooms.push_back(roomname);
+
 	//clean up
 	delete[] payload;
 	printf("Bytes Sent: %ld\n", result);
@@ -211,8 +213,8 @@ int main(int argc, char **argv)
 				sProtocolData data = ProtocolMethods::ParseBuffer(incoming);
 
 				//if it comes from a room that we're in, add it to the chat log
+				system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
 				for (int i = 0; i < rooms.size(); i++) {
-					system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
 					if (rooms[i] == data.room) { 
 						chatlog.push_back(data.userName + ":\t" + data.message); 
 					}

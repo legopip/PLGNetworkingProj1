@@ -103,7 +103,12 @@ sProtocolData ProtocolMethods::ParseBuffer(Buffer input)
 	}
 	else if (data.type == SEND_MESSAGE) // not going to be used
 	{
-
+		uint32_t nameLength = input.readUInt32BE();
+		data.userName = input.readUInt8BE(nameLength);
+		uint32_t roomLength = input.readUInt32BE();
+		data.room = input.readUInt8BE(roomLength);
+		uint32_t msgLength = input.readUInt32BE();
+		data.message = input.readUInt8BE(msgLength);
 	}
 	else if (data.type == RECV_MESSAGE)
 	{
