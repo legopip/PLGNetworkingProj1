@@ -1,7 +1,7 @@
 //Buffer.cpp
-//Gian tullo, 0886424 / Lucas Magalhaes
-//290921
-//Implements the functionality of a TCP Packet buffer
+//Gian tullo, 0886424 / Lucas Magalhaes / Philip
+//231021
+//Provides the functionality of a TCP Packet buffer
 
 #include "Buffer.h";
 

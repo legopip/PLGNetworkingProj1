@@ -1,5 +1,10 @@
 #define WIN32_LEAN_AND_MEAN
 
+//client_main.cpp
+//Gian tullo, 0886424 / Lucas Magalhaes / Philip
+//231021
+//A chatroom client, allowing for the sending and receiving of messages
+
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -11,6 +16,7 @@
 #include <vector>
 #include <Buffer.h>
 #include <ProtocolTypes.h>
+
 
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -26,7 +32,7 @@ Buffer incoming(DEFAULT_BUFLEN);
 
 std::vector<std::string> rooms;
 
-
+//Assembles a Protocol for the buffer
 Buffer MakeProtocol(ProtocolType type, std::string name, std::string room, std::string message)
 {
 	Buffer tempBuf(DEFAULT_BUFLEN);
@@ -99,6 +105,8 @@ Buffer MakeProtocol(ProtocolType type, std::string name, std::string room, std::
 	return tempBuf;
 }
 
+
+//Retreives data from the buffer into a more usable format
 sProtocolData ParseBuffer(Buffer input)
 {
 	sProtocolData data;
@@ -116,7 +124,7 @@ sProtocolData ParseBuffer(Buffer input)
 
 		// not sure if this is the right way to do it
 		// or if we are doing this on the loop
-		//data.message = data.userName + " entered " + data.room + " room";
+		data.message = data.userName + " entered " + data.room + " room";
 	}
 	else if (data.type == LEAVE_ROOM)
 	{
@@ -126,7 +134,7 @@ sProtocolData ParseBuffer(Buffer input)
 		itemLength = input.readUInt32BE();
 		data.room = input.readUInt8BE(itemLength);
 
-		// data.message = data.userName + " left the " + data.room + " room";
+		data.message = data.userName + " left the " + data.room + " room";
 	}
 	else if (data.type == SEND_MESSAGE) // not going to be used
 	{
@@ -134,14 +142,13 @@ sProtocolData ParseBuffer(Buffer input)
 	}
 	else if (data.type == RECV_MESSAGE)
 	{
-		int itemLength = input.readUInt32BE();
-		data.userName = input.readUInt8BE(itemLength);
 
-		itemLength = input.readUInt32BE();
-		data.room = input.readUInt8BE(itemLength);
-
-		itemLength = input.readUInt32BE();
-		data.message = input.readUInt8BE(itemLength);
+		uint32_t nameLength = incoming.readUInt32BE();
+		data.userName = incoming.readUInt8BE(nameLength);
+		uint32_t roomLength = incoming.readUInt32BE();
+		data.room = incoming.readUInt8BE(roomLength);
+		uint32_t msgLength = incoming.readUInt32BE();
+		data.message = incoming.readUInt8BE(msgLength);
 	}
 
 	return data;
@@ -230,7 +237,8 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	//Right now I'm assuming that this can be blocking
+	//Get login info from user
+	//this is blocking, but that okay since we're no in a room yet
 	std::string username = "";
 	std::string roomname = "";
 	std::cout << "Enter your username:" << std::endl;
@@ -238,11 +246,13 @@ int main(int argc, char **argv)
 	std::cout << "Enter the name of the room you want to join:" << std::endl;
 	std::cin >> roomname;
 
-	outgoing = MakeProtocol(JOIN_ROOM, username, roomname, "");
-
+	//assemble the protocol
+	outgoing = MakeProtocol(JOIN_ROOM, username, roomname, "");//this has no inherent message
 	sProtocolData data = ParseBuffer(outgoing);
 
+	//change it to a format we can transport
 	char* payload = outgoing.PayloadToString();
+	//send it
 	result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
 	if (result == SOCKET_ERROR)
 	{
@@ -251,14 +261,17 @@ int main(int argc, char **argv)
 		WSACleanup();
 		return 1;
 	}
+
+	//clean up
 	delete[] payload;
-	//rooms.push_back(roomname);
 	printf("Bytes Sent: %ld\n", result);
 	
+	//start Client loop
 	bool updateLog = false;
 	bool quit = false;
 	while (!quit) {
 
+		//get keyboard input
 		if (_kbhit()) {
 			char key = _getch();
 
@@ -270,11 +283,13 @@ int main(int argc, char **argv)
 			}
 			else if (key == 13) { // enter to send
 
+				//call to asseble the protocol
 				outgoing = MakeProtocol(SEND_MESSAGE, username, roomname, message);
-
 				sProtocolData data = ParseBuffer(outgoing);
 
+				//change it to a form we can transport
 				char* payload = outgoing.PayloadToString();
+				//send it
 				result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
 				if (result == SOCKET_ERROR)
 				{
@@ -283,6 +298,8 @@ int main(int argc, char **argv)
 					WSACleanup();
 					return 1;
 				}
+
+				//clean up
 				delete[] payload;
 				printf("Bytes Sent: %ld\n", result);
 				message = "";
@@ -300,37 +317,30 @@ int main(int argc, char **argv)
 			if (result > 0)
 			{
 				
+				//get the inbound message, and put it in the buffer
 				printf("Bytes received: %d\n", result);
-					//std::string inbound = "";
-					//for (int i = 0; i < recvbuflen; i++) {
-					//	if (recvbuf[i] != '\0') { inbound += recvbuf[i]; }
-					//}
 				std::string received = "";
 				for (int i = 0; i < recvbuflen; i++) {
 					received.push_back(recvbuf[i]);
 				}
-				//std::cout << client->dataBuf.buf[i] << std::endl;
-
 				incoming.LoadBuffer(received);
 
-				uint32_t bufferLength = incoming.readUInt32BE();
-				uint32_t messageId = incoming.readUInt32BE();
-				uint32_t nameLength = incoming.readUInt32BE();
-				std::string name = incoming.readUInt8BE(nameLength);
-				uint32_t roomLength = incoming.readUInt32BE();
-				std::string room = incoming.readUInt8BE(roomLength);
-				uint32_t msgLength = incoming.readUInt32BE();
-				std::string msg = incoming.readUInt8BE(msgLength);
+				//Parse the data in the buffer
 
-				system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
-				//chatlog.push_back(inbound);
+				sProtocolData data = ParseBuffer(incoming);
+
+				//if it comes from a room that we're in, add it to the chat log
 				for (int i = 0; i < rooms.size(); i++) {
-					if (rooms[i] == room) { chatlog.push_back(name + ":\t" + msg); }
+					system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
+					if (rooms[i] == data.room) { 
+						chatlog.push_back(data.userName + ":\t" + data.message); 
+					}
 					updateLog = true;
 				}
 			}
 			else if (result == 0)
 			{
+				//if we've left
 				printf("Connection closed\n");
 			}
 			else
@@ -350,6 +360,7 @@ int main(int argc, char **argv)
 					std::cout << chatlog[i] << std::endl;
 				}
 				std::cout << std::endl;
+				//user input
 				std::cout << "message: ";
 				std::cout << message << std::endl;
 				updateLog = false;
@@ -358,6 +369,26 @@ int main(int argc, char **argv)
 		}
 
 	}
+
+	//Leave
+	outgoing = MakeProtocol(LEAVE_ROOM, username, roomname, "");//this has no inherent message
+	sProtocolData leaveData = ParseBuffer(outgoing);
+
+	//change it to a format we can transport
+	char* leavePayload = outgoing.PayloadToString();
+	//send it
+	result = send(connectSocket, leavePayload, outgoing.readUInt32BE(0), 0);
+	if (result == SOCKET_ERROR)
+	{
+		printf("send failed with error: %d\n", WSAGetLastError());
+		closesocket(connectSocket);
+		WSACleanup();
+		return 1;
+	}
+
+	//clean up
+	delete[] leavePayload;
+	printf("Bytes Sent: %ld\n", result);
 
 	// Step #5 shutdown the connection since no more data will be sent
 	result = shutdown(connectSocket, SD_SEND);

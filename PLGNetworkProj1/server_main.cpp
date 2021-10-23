@@ -1,5 +1,10 @@
 #define WIN32_LEAN_AND_MEAN			// Strip rarely used calls
 
+//server_main.cpp
+//Gian tullo, 0886424 / Lucas Magalhaes /Philip
+//231021
+//A chatroom server, allowing for the sending and receiving of messages
+
 #include <Windows.h>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
@@ -273,10 +278,6 @@ int main(int argc, char** argv)
 				uint32_t roomLength = ingoing.readUInt32BE();
 				std::string room = ingoing.readUInt8BE(roomLength);
 
-				if (messageId == JOIN_ROOM) {
-					std::string msg = "Has joined room " + room;
-					//TODO: add this to the buffer being sent back
-				}
 				
 				//int value = 0;
 				//value |= client->dataBuf.buf[0] << 24;

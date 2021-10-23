@@ -143,9 +143,6 @@
     <ClCompile Include="..\PLGNetworkProj1\server_main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ClientData.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\PLGNetworkingProj1Lib\PLGNetworkingProj1Lib.vcxproj">
       <Project>{7bb63b04-d0af-4881-bfe1-c78393b70fc7}</Project>
     </ProjectReference>
