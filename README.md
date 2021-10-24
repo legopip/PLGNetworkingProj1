@@ -18,6 +18,12 @@ Go to properties of solution, set the build order to;
 -server
 -client (PLGNetworkingProj1)
 
+Then:
+
+add "$(SolutionDir)PLGNetworkingProj1Lib;" to VC++ Directories under proporties for both the server and the client project
+
+Terribly sorry for the inconvinience, but these properties didn't carry with git. Feedback of how to fix this would help with projects going forword
+
 NOTE: 
 sometimes window OS sounds play when sending a message. Nothing crashes, it just makes the noise.
 
