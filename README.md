@@ -16,7 +16,7 @@ sometimes window OS sounds play when sending a message. Nothing crashes, it just
 Genuanly don't know what is causing that, so if you know what it might be, feedback would be appreciated.
 
 
-**Contributers**
+**Contributors**
 
 legopip:            Gain Tulo
 
