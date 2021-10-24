@@ -88,7 +88,7 @@ Buffer ProtocolMethods::MakeProtocol(ProtocolType type, std::string name, std::s
 sProtocolData ProtocolMethods::ParseBuffer(Buffer input)
 {
 	sProtocolData data;
-	if (input.GetBuffer().size() == 0)
+	if (input.GetBuffer().size() == 0) //size check
 	{
 		return data;
 	}

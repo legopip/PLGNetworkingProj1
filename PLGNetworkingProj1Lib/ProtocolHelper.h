@@ -18,7 +18,7 @@ enum ProtocolType
 	RECV_MESSAGE
 };
 
-
+//structure of data from a protocol
 struct sProtocolData
 {
 	ProtocolType type;

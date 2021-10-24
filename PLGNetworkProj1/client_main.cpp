@@ -30,6 +30,8 @@
 Buffer outgoing(DEFAULT_BUFLEN);
 Buffer incoming(DEFAULT_BUFLEN);
 
+//The server doesn't know what rooms are, it just sends and then each client either acepts or rejects the data
+//depending on what rooms the client knows about.
 std::vector<std::string> rooms;
 
 
@@ -224,7 +226,7 @@ int main(int argc, char **argv)
 						{
 							//call to asseble the protocol
 							outgoing = ProtocolMethods::MakeProtocol(SEND_MESSAGE, username, room, message);
-							//sProtocolData data = ParseBuffer(outgoing);
+							
 
 							//change it to a form we can transport
 							char* payload = outgoing.PayloadToString();
@@ -254,7 +256,6 @@ int main(int argc, char **argv)
 						{
 							//Leave
 							outgoing = ProtocolMethods::MakeProtocol(LEAVE_ROOM, username, message, "");
-							sProtocolData leaveData = ProtocolMethods::ParseBuffer(outgoing);
 
 							//change it to a format we can transport
 							char* leavePayload = outgoing.PayloadToString();
@@ -308,7 +309,7 @@ int main(int argc, char **argv)
 				system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
 				for (int i = 0; i < rooms.size(); i++) {
 					if (rooms[i] == data.room) { 
-						chatlog.push_back(data.userName + ":\t" + data.message); 
+						chatlog.push_back(data.userName + "   [" + data.room + "]" + ":\t" + data.message); 
 					}
 					updateLog = true;
 				}
