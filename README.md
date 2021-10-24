@@ -21,7 +21,7 @@ Go to properties of solution, set the build order to;
 NOTE: 
 sometimes window OS sounds play when sending a message. Nothing crashes, it just makes the noise.
 
-Genuanly don't know what is causing that, so if you know what it might be, feedback would be appreciated.
+Genuinely don't know what is causing that, so if you know what it might be, feedback would be appreciated.
 
 
 **Contributors**
