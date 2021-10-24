@@ -6,5 +6,8 @@ Tested in Debug x64
 
 Video Demo link (youtube): https://youtu.be/NJl9cbE1zgA
 
+
+NOTE:
+Build order doesn't save over git downloads. makes sure to run the server, then run the client.
 NOTE: 
 sometimes window OS sounds play randomly when using it, just ingore, it's nothing.
