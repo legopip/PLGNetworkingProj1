@@ -1,8 +1,8 @@
 #define WIN32_LEAN_AND_MEAN			// Strip rarely used calls
 
 //server_main.cpp
-//Gian tullo, 0886424 / Lucas Magalhaes /Philip Tomaszewski
-//231021
+//Gian Tullo, 0886424 / Lucas Magalhaes /Philip Tomaszewski
+//23/10/21
 //A chatroom server, allowing for the sending and receiving of messages
 
 #include <Windows.h>

@@ -1,8 +1,8 @@
 #pragma once
 
 //ProtocolHelper.h
-//Gian tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
-//231021
+//Gian Tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
+//23/10/21
 //Outlines our protocols
 
 #define DEFAULT_BUFLEN 512

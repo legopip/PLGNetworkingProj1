@@ -1,8 +1,8 @@
 #define WIN32_LEAN_AND_MEAN
 
 //client_main.cpp
-//Gian tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
-//231021
+//Gian Tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
+//23/10/21
 //A chatroom client, allowing for the sending and receiving of messages
 
 #include <windows.h>
@@ -165,6 +165,7 @@ int main(int argc, char **argv)
 				if (message.length() != 0)
 				{
 					message.pop_back();
+					system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
 					updateLog = true;
 				}
 			}

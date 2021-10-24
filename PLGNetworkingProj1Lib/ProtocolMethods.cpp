@@ -1,8 +1,8 @@
 #include "ProtocolHelper.h"
 
 //ProtocolMethods.cpp
-//Gian tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
-//231021
+//Gian Tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
+//23/10/21
 //Provides utility methods for the protocal
 //  see header for method manifest
 

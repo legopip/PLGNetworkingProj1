@@ -1,6 +1,6 @@
 //Buffer.h
-//Gian tullo, 0886424 / Lucas Magalhaes /Philip Tomaszewski
-//231021
+//Gian Tullo, 0886424 / Lucas Magalhaes /Philip Tomaszewski
+//23/10/21
 //Outlines the functionality of a TCP Packet buffer
 
 #pragma once

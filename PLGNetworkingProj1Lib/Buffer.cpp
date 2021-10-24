@@ -1,6 +1,6 @@
 //Buffer.cpp
-//Gian tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
-//231021
+//Gian Tullo, 0886424 / Lucas Magalhaes / Philip Tomaszewski
+//23/10/21
 //Provides the functionality of a TCP Packet buffer
 //  See header for method Manifest
 
