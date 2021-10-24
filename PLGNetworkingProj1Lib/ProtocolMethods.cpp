@@ -88,6 +88,11 @@ Buffer ProtocolMethods::MakeProtocol(ProtocolType type, std::string name, std::s
 sProtocolData ProtocolMethods::ParseBuffer(Buffer input)
 {
 	sProtocolData data;
+	if (input.GetBuffer().size() == 0)
+	{
+		return data;
+	}
+	
 	int length;
 	length = input.readUInt32BE();
 	data.type = (ProtocolType)input.readUInt32BE();

@@ -172,7 +172,7 @@ int main(int argc, char** argv)
 
 	FD_SET ReadSet;
 	int total;
-	//DWORD flags;
+	
 	DWORD RecvBytes;
 	DWORD SentBytes;
 
