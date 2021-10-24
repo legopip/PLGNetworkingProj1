@@ -160,8 +160,11 @@ int main(int argc, char **argv)
 			if (key == 27) { //esc to quit
 				quit = true;
 			}else if (key == 8) { //back to remove
-				message.pop_back();
-				updateLog = true;
+				if (message.length() != 0)
+				{
+					message.pop_back();
+					updateLog = true;
+				}
 			}
 			else if (key == 13) { // enter to send
 
