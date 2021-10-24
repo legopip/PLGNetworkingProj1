@@ -309,7 +309,7 @@ int main(int argc, char **argv)
 				system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
 				for (int i = 0; i < rooms.size(); i++) {
 					if (rooms[i] == data.room) { 
-						chatlog.push_back(data.userName + "   [" + data.room + "]" + ":\t" + data.message); 
+						chatlog.push_back("<" + data.room + "> " + data.userName + ":\t" + data.message);
 					}
 					updateLog = true;
 				}
